@@ -1,8 +1,7 @@
 package com.salem.budgetApp.controllers;
 
-import com.salem.budgetApp.services.AssetsServices;
+import com.salem.budgetApp.services.AssetsService;
 import com.salem.budgetApp.services.dtos.AssetsDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -10,19 +9,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/assets")
 public class AssetsController {
 
-    private final AssetsServices assetsServices;
+    private final AssetsService assetsService;
 
-    public AssetsController(AssetsServices assetsServices) {
-        this.assetsServices = assetsServices;
+    public AssetsController(AssetsService assetsService) {
+        this.assetsService = assetsService;
     }
 
     @GetMapping
     public AssetsDto getAssets(){
-        return assetsServices.getAssets();
+        return assetsService.getAllAssets();
     }
 
     @PostMapping("/{asset}")
     public void setAssets(@PathVariable("asset") int asset){
-        assetsServices.setAsset(asset);
+        assetsService.setAsset(asset);
     }
 }
