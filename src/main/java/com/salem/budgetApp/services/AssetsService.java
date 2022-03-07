@@ -30,10 +30,13 @@ public class AssetsService {
         return dto;
     }
     
-    public void setAsset(int asset){
-        var dto = new AssetDto();
-        dto.setAmount(new BigDecimal(asset));
+    public void setAsset(AssetDto dto){
         var entity = assetsMapper.fromDtoToEntity(dto);
         assetsRepository.save(entity);
+    }
+
+    public void deleteAsset(AssetDto dto) {
+        var entity = assetsMapper.fromDtoToEntity(dto);
+        assetsRepository.delete(entity);
     }
 }

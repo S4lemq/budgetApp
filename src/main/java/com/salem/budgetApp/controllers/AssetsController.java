@@ -1,6 +1,7 @@
 package com.salem.budgetApp.controllers;
 
 import com.salem.budgetApp.services.AssetsService;
+import com.salem.budgetApp.services.dtos.AssetDto;
 import com.salem.budgetApp.services.dtos.AssetsDto;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,13 @@ public class AssetsController {
         return assetsService.getAllAssets();
     }
 
-    @PostMapping("/{asset}")
-    public void setAssets(@PathVariable("asset") int asset){
-        assetsService.setAsset(asset);
+    @PostMapping
+    public void setAssets(@RequestBody AssetDto dto){
+        assetsService.setAsset(dto);
+    }
+
+    @DeleteMapping
+    public void deleteAsset(@RequestBody AssetDto dto){
+        assetsService.deleteAsset(dto);
     }
 }
