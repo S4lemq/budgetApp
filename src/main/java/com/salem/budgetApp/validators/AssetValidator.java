@@ -12,7 +12,7 @@ public class AssetValidator {
 
     public void validate(AssetDto dto){
         if(Objects.isNull(dto.getAmount())){
-            throw new AssetIncompleteException(ValidatorsAssetEnum.NO_AMOUNT.getMessage());
+            throw new AssetIncompleteException(ValidatorsAssetEnum.NO_AMOUNT.getMessage(), "E06122F8BE16439AAA22F38CF4073BC9");
         }
     }
 
