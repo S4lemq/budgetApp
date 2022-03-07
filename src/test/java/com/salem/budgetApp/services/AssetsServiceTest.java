@@ -2,10 +2,13 @@ package com.salem.budgetApp.services;
 
 import com.salem.budgetApp.builders.AssetDtoBuilder;
 import com.salem.budgetApp.builders.AssetEntityBuilder;
+import com.salem.budgetApp.enums.ValidatorsAssetEnum;
+import com.salem.budgetApp.exceptions.AssetIncompleteException;
 import com.salem.budgetApp.mappers.AssetsMapper;
 import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
+import com.salem.budgetApp.validators.AssetValidator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class AssetsServiceTest {
@@ -26,12 +31,13 @@ public class AssetsServiceTest {
     @Mock
     private AssetsRepository assetsRepository;
     private AssetsMapper assetsMapper = new AssetsMapper();
+    private AssetValidator assetValidator = new AssetValidator();
 
     private AssetsService service;
 
     @BeforeEach
     public void init(){
-        service = new AssetsService(assetsRepository, assetsMapper);
+        service = new AssetsService(assetsRepository, assetsMapper, assetValidator);
     }
 
     @Test
@@ -93,4 +99,19 @@ public class AssetsServiceTest {
         //then
         Mockito.verify(assetsRepository, Mockito.times(1)).save(entity);
     }
+
+    @Test
+    void shouldThrowExceptionWhenAmountInAssetDtoIsNull(){
+        //given
+        AssetDto dto = new AssetDto();
+
+        //when
+        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(dto));
+
+        //then
+        assertEquals(ValidatorsAssetEnum.NO_AMOUNT.getMessage(), result.getMessage());
+    }
+
+
+
 }
