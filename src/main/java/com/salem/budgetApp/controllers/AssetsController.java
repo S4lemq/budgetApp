@@ -5,6 +5,8 @@ import com.salem.budgetApp.services.dtos.AssetDto;
 import com.salem.budgetApp.services.dtos.AssetsDto;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/assets")
@@ -17,7 +19,7 @@ public class AssetsController {
     }
 
     @GetMapping
-    public AssetsDto getAssets(){
+    public List<AssetDto> getAssets(){
         return assetsService.getAllAssets();
     }
 

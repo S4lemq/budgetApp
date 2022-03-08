@@ -43,9 +43,9 @@ public class AssetsServiceTest {
     @Test
     void shouldReturnListWithOneElementIfThereIsOneElementInDatabase(){
         //given
-        var asset = 1;
+        var asset = BigDecimal.ONE;
         AssetEntity assetEntity = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(asset))
+                .withAmount(asset)
                 .build();
         List<AssetEntity> assetList = Collections.singletonList(assetEntity);
         Mockito.when(assetsRepository.findAll()).thenReturn(assetList);
@@ -54,21 +54,21 @@ public class AssetsServiceTest {
         var result = service.getAllAssets();
 
         //then
-        Assertions.assertThat(result.getAssets())
+        Assertions.assertThat(result)
                 .hasSize(1)
-                .containsExactly(asset);
+                .contains(new AssetDtoBuilder().withAmount(asset).build());
     }
 
     @Test
     void shouldReturnListWithTwoElementsIfThereWasTwoElementsInDatabase(){
         //given
-        var asset1 = 1;
-        var asset2 = 2;
+        var asset1 = BigDecimal.ONE;
+        var asset2 = new BigDecimal("2");
         AssetEntity entityOne = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(asset1))
+                .withAmount(asset1)
                 .build();
         AssetEntity entityTwo = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(asset2))
+                .withAmount(asset2)
                 .build();
         List<AssetEntity> assetsEntity = asList(entityOne,entityTwo);
         Mockito.when(assetsRepository.findAll()).thenReturn(assetsEntity);
@@ -77,9 +77,12 @@ public class AssetsServiceTest {
         var result = service.getAllAssets();
 
         //then
-        Assertions.assertThat(result.getAssets())
+        Assertions.assertThat(result)
                 .hasSize(2)
-                .contains(asset1,asset2);
+                .containsExactly(
+                        new AssetDtoBuilder().withAmount(asset1).build(),
+                        new AssetDtoBuilder().withAmount(asset2).build()
+                );
     }
 
     @Test
