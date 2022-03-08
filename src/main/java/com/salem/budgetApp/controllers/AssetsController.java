@@ -32,4 +32,9 @@ public class AssetsController {
     public void deleteAsset(@RequestBody AssetDto dto){
         assetsService.deleteAsset(dto);
     }
+
+    @PutMapping
+    public void updateAsset(@RequestBody AssetDto dto){
+        assetsService.updateAsset(dto);
+    }
 }

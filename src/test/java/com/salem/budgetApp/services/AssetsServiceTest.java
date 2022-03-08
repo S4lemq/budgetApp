@@ -20,10 +20,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class AssetsServiceTest {
@@ -115,6 +117,20 @@ public class AssetsServiceTest {
         assertEquals(ValidatorsAssetEnum.NO_AMOUNT.getMessage(), result.getMessage());
     }
 
+    @Test
+    void shouldVerifyIfTheRepositoryUpdateWasCalled(){
+        //given
+        BigDecimal asset = BigDecimal.ONE;
+        var dto = new AssetDtoBuilder().withAmount(asset).build();
+        var entity = new AssetEntityBuilder().withAmount(asset).build();
+        Mockito.when(assetsRepository.findById(any())).thenReturn(Optional.of(entity));
+
+        //when
+        service.updateAsset(dto);
+
+        //then
+        Mockito.verify(assetsRepository, Mockito.times(1)).saveAndFlush(entity);
+    }
 
 
 }

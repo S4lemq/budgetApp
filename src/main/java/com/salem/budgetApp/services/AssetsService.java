@@ -41,4 +41,12 @@ public class AssetsService {
         var entity = assetsMapper.fromDtoToEntity(dto);
         assetsRepository.delete(entity);
     }
+
+    public void updateAsset(AssetDto dto) {
+        var entity = assetsRepository.findById(dto.getId());
+        entity.ifPresent(e -> {
+            e.setAmount(dto.getAmount());
+            assetsRepository.saveAndFlush(e);
+        });
+    }
 }
