@@ -1,5 +1,6 @@
 package com.salem.budgetApp.services;
 
+import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.mappers.AssetsMapper;
 import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.services.dtos.AssetDto;
@@ -59,5 +60,12 @@ public class AssetsService {
             assetsRepository.saveAndFlush(e);
         });
         LOGGER.info("Asset update");
+    }
+
+    public List<AssetDto> getAssetByCategory(AssetCategory category){
+        return assetsRepository.getAssetEntitiesByCategory(category)
+                .stream()
+                .map(entity -> assetsMapper.fromEntityToDto(entity))
+                .collect(Collectors.toList());
     }
 }

@@ -21,11 +21,9 @@ public class AssetEntity {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private UUID id;
-
     private BigDecimal amount;
-
     private Instant incomeDate;
-
+    @Enumerated(EnumType.STRING)
     private AssetCategory category;
 
     public UUID getId() {
