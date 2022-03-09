@@ -10,13 +10,16 @@ import java.util.Objects;
 @Component
 public class AssetValidator {
 
+    private Validator validator = new AmountValidator();
+
     public void validate(AssetDto dto){
-        if(Objects.isNull(dto.getAmount())){
-            throw new AssetIncompleteException(ValidatorsAssetEnum.NO_AMOUNT.getMessage(), "E06122F8BE16439AAA22F38CF4073BC9");
+        var validatorMessage = validator.valid(dto, new ValidatorMessage());
+
+        if(validatorMessage.getMessage().isEmpty()){
+            return;
         }
-        if(Objects.isNull(dto.getIncomeDate())){
-            throw new AssetIncompleteException(ValidatorsAssetEnum.NO_INCOME_DATE.getMessage(), "BEC14159418E4C5CA69FCC757EFCC637");
-        }
+
+        throw new AssetIncompleteException(validatorMessage.getMessage(), validatorMessage.getCode());
     }
 
 }

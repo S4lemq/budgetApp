@@ -9,6 +9,7 @@ import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
 import com.salem.budgetApp.validators.AssetValidator;
+import liquibase.pro.packaged.A;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -111,7 +112,9 @@ public class AssetsServiceTest {
     @Test
     void shouldThrowExceptionWhenAmountInAssetDtoIsNull(){
         //given
-        AssetDto dto = new AssetDto();
+        AssetDto dto = new AssetDtoBuilder()
+                .withIncomeDate(Instant.now())
+                .build();
 
         //when
         var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(dto));
@@ -148,6 +151,22 @@ public class AssetsServiceTest {
 
         //then
         assertEquals(ValidatorsAssetEnum.NO_INCOME_DATE.getMessage(), result.getMessage());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenIncomdeDateAndAmountInAssetDtoIsNull(){
+        //given
+        AssetDto dto = new AssetDto();
+        String messageSeparator = ", ";
+        String expectedMessage = ValidatorsAssetEnum.NO_AMOUNT.getMessage()
+                + messageSeparator
+                + ValidatorsAssetEnum.NO_INCOME_DATE.getMessage();
+
+        //when
+        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(dto));
+
+        //then
+        assertEquals(expectedMessage, result.getMessage());
     }
 
 
