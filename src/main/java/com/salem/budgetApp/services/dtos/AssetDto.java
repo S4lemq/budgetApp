@@ -1,5 +1,8 @@
 package com.salem.budgetApp.services.dtos;
 
+import com.salem.budgetApp.enums.AssetCategory;
+import jdk.jfr.Category;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
@@ -9,6 +12,7 @@ public class AssetDto {
     private UUID id;
     private BigDecimal amount;
     private Instant incomeDate;
+    private AssetCategory category;
 
     public UUID getId() {
         return id;
@@ -34,6 +38,14 @@ public class AssetDto {
         this.incomeDate = incomeDate;
     }
 
+    public AssetCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(AssetCategory category) {
+        this.category = category;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,6 +65,7 @@ public class AssetDto {
                 "id=" + id +
                 ", amount=" + amount +
                 ", incomeDate=" + incomeDate +
+                ", category=" + category +
                 '}';
     }
 }
