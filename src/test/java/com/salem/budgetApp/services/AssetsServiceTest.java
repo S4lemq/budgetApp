@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -91,8 +92,10 @@ public class AssetsServiceTest {
     void shouldVerifyIfTheRepositorySaveWasCalledOneTime(){
         //given
         BigDecimal asset = BigDecimal.ONE;
+        Instant incomeDate = Instant.now();
         AssetDto dto = new AssetDtoBuilder()
                 .withAmount(asset)
+                .withIncomeDate(incomeDate)
                 .build();
         AssetEntity entity = new AssetEntityBuilder()
                 .withAmount(asset)
@@ -130,6 +133,21 @@ public class AssetsServiceTest {
 
         //then
         Mockito.verify(assetsRepository, Mockito.times(1)).saveAndFlush(entity);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenIncomeDateInAssetDtoIsNull(){
+        //given
+        BigDecimal asset = BigDecimal.ONE;
+        AssetDto dto = new AssetDtoBuilder()
+                .withAmount(asset)
+                .build();
+
+        //when
+        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(dto));
+
+        //then
+        assertEquals(ValidatorsAssetEnum.NO_INCOME_DATE.getMessage(), result.getMessage());
     }
 
 

@@ -2,7 +2,6 @@ package com.salem.budgetApp.controllers;
 
 import com.salem.budgetApp.services.AssetsService;
 import com.salem.budgetApp.services.dtos.AssetDto;
-import com.salem.budgetApp.services.dtos.AssetsDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class AssetsController {
     }
 
     @PostMapping
-    public void setAssets(@RequestBody AssetDto dto){
+    public void setAsset(@RequestBody AssetDto dto){
         assetsService.setAsset(dto);
     }
 

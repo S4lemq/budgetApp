@@ -4,11 +4,13 @@ import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 public class AssetEntityBuilder {
     private UUID id;
     private BigDecimal amount;
+    private Instant incomeDate;
 
     public AssetEntityBuilder withId(UUID id){
         this.id = id;
@@ -20,10 +22,16 @@ public class AssetEntityBuilder {
         return this;
     }
 
+    public AssetEntityBuilder withInsuranceDate(Instant incomeDate){
+        this.incomeDate = incomeDate;
+        return this;
+    }
+
     public AssetEntity build(){
-        var dto = new AssetEntity();
-        dto.setId(this.id);
-        dto.setAmount(this.amount);
-        return dto;
+        var entity = new AssetEntity();
+        entity.setId(this.id);
+        entity.setAmount(this.amount);
+        entity.setIncomeDate(this.incomeDate);
+        return entity;
     }
 }
