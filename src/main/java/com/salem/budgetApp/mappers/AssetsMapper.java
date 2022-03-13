@@ -10,11 +10,11 @@ import java.util.Objects;
 
 @Component
 public class AssetsMapper {
+
     public AssetEntity fromDtoToEntity(AssetDto dto){
         if(Objects.isNull(dto)){
             return null;
         }
-
         var entityBuilder = new AssetEntityBuilder();
 
         if(Objects.nonNull(dto.getId())){

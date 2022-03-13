@@ -21,5 +21,4 @@ public class AssetValidator {
 
         throw new AssetIncompleteException(validatorMessage.getMessage(), validatorMessage.getCode());
     }
-
 }

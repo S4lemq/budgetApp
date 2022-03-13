@@ -63,8 +63,7 @@ public class AssetsService {
     }
 
     public List<AssetDto> getAssetByCategory(AssetCategory category){
-        return assetsRepository.getAssetEntitiesByCategory(category)
-                .stream()
+        return assetsRepository.getAssetEntitiesByCategory(category).stream()
                 .map(entity -> assetsMapper.fromEntityToDto(entity))
                 .collect(Collectors.toList());
     }
