@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.User;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -34,6 +35,9 @@ public class AssetsServiceTest {
 
     @Mock
     private AssetsRepository assetsRepository;
+    @Mock
+    private UserLogInfoService userLogInfoService;
+
     private AssetsMapper assetsMapper = new AssetsMapper();
     private AssetValidator assetValidator = new AssetValidator();
 
@@ -41,7 +45,7 @@ public class AssetsServiceTest {
 
     @BeforeEach
     public void init(){
-        service = new AssetsService(assetsRepository, assetsMapper, assetValidator);
+        service = new AssetsService(assetsRepository, assetsMapper, assetValidator, userLogInfoService);
     }
 
     @Test

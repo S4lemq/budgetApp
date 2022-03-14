@@ -2,6 +2,7 @@ package com.salem.budgetApp.builders;
 
 import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
+import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ public class AssetEntityBuilder {
     private BigDecimal amount;
     private Instant incomeDate;
     private AssetCategory category;
+    private UserEntity user;
 
     public AssetEntityBuilder withId(UUID id){
         this.id = id;
@@ -34,12 +36,20 @@ public class AssetEntityBuilder {
         return this;
     }
 
+    public AssetEntityBuilder withUser(UserEntity user) {
+        this.user = user;
+        return this;
+    }
+
     public AssetEntity build(){
         var entity = new AssetEntity();
         entity.setId(this.id);
         entity.setAmount(this.amount);
         entity.setIncomeDate(this.incomeDate);
         entity.setCategory(this.category);
+        entity.setUser(this.user);
         return entity;
     }
+
+
 }

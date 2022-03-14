@@ -25,6 +25,8 @@ public class AssetEntity {
     private Instant incomeDate;
     @Enumerated(EnumType.STRING)
     private AssetCategory category;
+    @Transient
+    private UserEntity user;
 
     public UUID getId() {
         return id;
@@ -58,17 +60,25 @@ public class AssetEntity {
         this.category = category;
     }
 
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AssetEntity that = (AssetEntity) o;
-        return Objects.equals(id, that.id);
+        AssetEntity entity = (AssetEntity) o;
+        return Objects.equals(id, entity.id) && Objects.equals(user, entity.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, user);
     }
 
     @Override
@@ -78,6 +88,7 @@ public class AssetEntity {
                 ", amount=" + amount +
                 ", incomeDate=" + incomeDate +
                 ", category=" + category +
+                ", user=" + user +
                 '}';
     }
 }

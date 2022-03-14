@@ -3,7 +3,9 @@ package com.salem.budgetApp.mappers;
 import com.salem.budgetApp.builders.AssetDtoBuilder;
 import com.salem.budgetApp.builders.AssetEntityBuilder;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
+import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
+import org.springframework.objenesis.Objenesis;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -11,7 +13,7 @@ import java.util.Objects;
 @Component
 public class AssetsMapper {
 
-    public AssetEntity fromDtoToEntity(AssetDto dto){
+    public AssetEntity fromDtoToEntity(AssetDto dto, UserEntity user){
         if(Objects.isNull(dto)){
             return null;
         }
@@ -31,6 +33,10 @@ public class AssetsMapper {
 
         if(Objects.nonNull(dto.getCategory())){
             entityBuilder.withCategory(dto.getCategory());
+        }
+
+        if(Objects.nonNull(user)){
+            entityBuilder.withUser(user);
         }
 
         return entityBuilder.build();
