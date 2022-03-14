@@ -1,7 +1,7 @@
 package com.salem.budgetApp.services;
 
 import com.salem.budgetApp.services.dtos.AuthenticationJwtToken;
-import com.salem.budgetApp.services.dtos.AuthenticationUserDto;
+import com.salem.budgetApp.services.dtos.UserDetailsDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,11 +20,11 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    public AuthenticationJwtToken createAuthenticationToken(AuthenticationUserDto authenticationUserDto){
+    public AuthenticationJwtToken createAuthenticationToken(UserDetailsDto userDetailsDto){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticationUserDto.getUserName(), authenticationUserDto.getPassword()
+                userDetailsDto.getUsername(), userDetailsDto.getPassword()
         ));
-        var userDetails = userDetailsService.loadUserByUsername(authenticationUserDto.getUserName());
+        var userDetails = userDetailsService.loadUserByUsername(userDetailsDto.getUsername());
         var jwtToken = jwtService.generateJWTToken(userDetails);
 
         return new AuthenticationJwtToken(jwtToken);
