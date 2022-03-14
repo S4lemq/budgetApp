@@ -1,5 +1,7 @@
 package com.salem.budgetApp.services;
 
+import com.salem.budgetApp.exceptions.BudgetUserAlreadyExistsInDatabaseException;
+import com.salem.budgetApp.exceptions.BudgetUserNotFoundException;
 import com.salem.budgetApp.mappers.UserMapper;
 import com.salem.budgetApp.repositories.UserRepository;
 import com.salem.budgetApp.services.dtos.UserDetailsDto;
@@ -32,16 +34,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LOGGER.info("Searching user " + username);
         var entity = userRepository
                 .findByUsername(username)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(BudgetUserNotFoundException::new);
 
         return new User(entity.getUsername(), entity.getPassword(), Collections.emptyList());
     }
 
     public UUID saveUser(UserDetailsDto userDetailsDto){
+        validateIfUserExists(userDetailsDto);
         var entity = userMapper.fromDtoToEntity(userDetailsDto);
         var savedEntity = userRepository.save(entity);
         LOGGER.info("User saved = " + savedEntity);
 
         return savedEntity.getId();
+    }
+
+    private void validateIfUserExists(UserDetailsDto userDetailsDto) {
+        var entity = userRepository.findByUsername(userDetailsDto.getUsername());
+
+        if(entity.isPresent()){
+            throw new BudgetUserAlreadyExistsInDatabaseException();
+        }
     }
 }
