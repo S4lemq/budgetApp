@@ -1,8 +1,10 @@
 package com.salem.budgetApp.services;
 
+import com.salem.budgetApp.exceptions.BudgetUserNotFoundException;
 import com.salem.budgetApp.repositories.UserRepository;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -19,11 +21,9 @@ public class UserLogInfoService {
     public UserEntity getLoggedUserEntity(){
         var authentication = SecurityContextHolder.getContext().getAuthentication();//pobranie aktualnego
         //zalogowanego użytkownika dzięki informacjom uzyskanym z kontekstu Spring Security
-        var username = authentication.getPrincipal();
+        var username = ((User)authentication.getPrincipal()).getUsername();
 
-        var user = new UserEntity();
-        user.setId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
-
-        return user;
+        return userRepository.findByUsername(username)
+                .orElseThrow(BudgetUserNotFoundException::new);
     }
 }

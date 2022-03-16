@@ -35,7 +35,9 @@ public class AssetsService {
 
     public List<AssetDto> getAllAssets(){
         LOGGER.debug("Get all assets");
-        return assetsRepository.findAll().stream()
+        var user = getUserEntity();
+
+        return assetsRepository.getAssetEntitiesByUser(user).stream()
                 .map(entity -> assetsMapper.fromEntityToDto(entity))
                 .collect(Collectors.toList());
     }

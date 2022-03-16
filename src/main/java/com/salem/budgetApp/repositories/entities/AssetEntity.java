@@ -25,7 +25,7 @@ public class AssetEntity {
     private Instant incomeDate;
     @Enumerated(EnumType.STRING)
     private AssetCategory category;
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
     public UUID getId() {
