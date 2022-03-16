@@ -9,6 +9,7 @@ import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.AssetsService;
 import com.salem.budgetApp.services.dtos.AssetDto;
+import org.assertj.core.util.Streams;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -80,6 +82,40 @@ public class AssetServiceIntegrationTest {
         assertThat(allAssetsWithOneCategory).hasSize(1);
         var entity = allAssetsWithOneCategory.get(0);
         assertThat(entity.getCategory()).isEqualTo(category);
+    }
+
+    @Test
+    void should_delete_all_assets_of_chosen_user(){
+        //given
+        init_database_by_default_mock_user_and_his_assets();
+        init_database_by_second_mock_user_and_his_assets();
+        int numberOfAllAssets = 6;
+        int numberOfLeaveAssets = 3;
+
+        var allUsers = userRepository.findAll();
+        var userToDeleteAssets = Streams.stream(allUsers).findFirst();
+        UserEntity userEntity = userToDeleteAssets.get();
+        var userToLeaveAssets = Streams.stream(allUsers)
+                .filter(entity -> !entity.equals(userEntity))
+                .findFirst().get();
+
+        var allAssetsInDatabase = assetsRepository.findAll();
+        assertThat(allAssetsInDatabase).hasSize(numberOfAllAssets);
+
+        //when
+        service.deleteAllAssetsByUser(userEntity);
+
+        //then
+        var assetsAfterDelete = assetsRepository.findAll();
+        assertThat(assetsAfterDelete).hasSize(numberOfLeaveAssets);
+
+        var assetsUserId = assetsAfterDelete.stream()
+                .map(assetEntity -> assetEntity.getUser())
+                .map(ue -> ue.getId())
+                .distinct()
+                .collect(Collectors.toList());
+
+        assertThat(assetsUserId).hasSize(1).containsExactly(userToLeaveAssets.getId());
     }
 
     private UserEntity init_default_mock_user_in_database(){

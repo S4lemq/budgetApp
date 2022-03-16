@@ -16,4 +16,6 @@ public interface AssetsRepository extends JpaRepository<AssetEntity, UUID> {
 
     List<AssetEntity> getAssetEntitiesByUser(UserEntity userEntity);
 
+    void deleteAllByUser(UserEntity userEntity);
+
 }

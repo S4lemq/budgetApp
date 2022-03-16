@@ -61,6 +61,11 @@ public class AssetsService {
         LOGGER.info("Asset deleted");
     }
 
+    public void deleteAllAssetsByUser(UserEntity userEntity){
+        assetsRepository.deleteAllByUser(userEntity);
+        LOGGER.info("All assets by User" + userEntity +  " deleted");
+    }
+
     public void updateAsset(AssetDto dto) {
         LOGGER.info("Update asset");
         LOGGER.debug("AssetDto: " + dto);
