@@ -34,9 +34,9 @@ public class UserDetailsServiceImplIntegrationTest {
     private static final String USER_PASSWORD = "userPassword";
 
     @Test
-    void shouldReturnUserWithUserNameAndPasswordFromDatabase(){
+    void should_return_user_with_userName_and_password_from_database(){
         //given
-        initDatabase();
+        init_database();
 
         //when
         var result = userDetailsService.loadUserByUsername(USER_NAME);
@@ -47,7 +47,7 @@ public class UserDetailsServiceImplIntegrationTest {
     }
 
     @Test
-    void shouldSaveUserInToDatabase(){
+    void should_save_user_in_to_database(){
         //given
         UserDetailsDto dto = new UserDetailsDto();
         dto.setUsername(USER_NAME);
@@ -70,9 +70,9 @@ public class UserDetailsServiceImplIntegrationTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserIsNotFoundInDatabase(){
+    void should_throw_exception_when_user_is_not_found_in_database(){
         //given
-        initDatabase();
+        init_database();
 
         //when
         var result = assertThrows(BudgetUserNotFoundException.class,
@@ -83,9 +83,9 @@ public class UserDetailsServiceImplIntegrationTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserAlreadyExistsInDatabase(){
+    void should_throw_exception_when_user_already_exists_in_database(){
         //given
-        initDatabase();
+        init_database();
         UserDetailsDto dto = new UserDetailsDto();
         dto.setUsername(USER_NAME);
         dto.setPassword(USER_PASSWORD);
@@ -98,7 +98,7 @@ public class UserDetailsServiceImplIntegrationTest {
         assertThat(result.getMessage()).isEqualTo(AuthenticationMessageEnum.USER_ALREADY_EXISTS.getMessage());
     }
 
-    private void initDatabase(){
+    private void init_database(){
         UserEntity entity = new UserEntity();
         entity.setUsername(USER_NAME);
         entity.setPassword(USER_PASSWORD);

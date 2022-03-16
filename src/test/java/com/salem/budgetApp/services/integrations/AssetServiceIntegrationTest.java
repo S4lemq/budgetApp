@@ -34,10 +34,10 @@ public class AssetServiceIntegrationTest {
     private UserRepository userRepository;
 
     @Test
-    void shouldReturnListWithTreeElements(){
+    void should_return_list_with_three_elements(){
         //given
-        initDatabaseByDefaultMockUserAndHisAssets();
-        initDatabaseBySecondMockUserAndHisAssets();
+        init_database_by_default_mock_user_and_his_assets();
+        init_database_by_second_mock_user_and_his_assets();
 
         //when
         var allAssetsInDB = service.getAllAssets();
@@ -47,9 +47,9 @@ public class AssetServiceIntegrationTest {
     }
 
     @Test
-    void shouldAddAssetToDB(){
+    void should_add_asset_to_DB(){
         //given
-        initDefaultMockUserInDatabase();
+        init_default_mock_user_in_database();
         AssetDto dto = new AssetDtoBuilder()
                 .withAmount(new BigDecimal(4000))
                 .withIncomeDate(Instant.now())
@@ -68,9 +68,9 @@ public class AssetServiceIntegrationTest {
     }
 
     @Test
-    public void shouldReturnListOnlyWithOneCategory(){
+    public void should_return_list_only_with_one_category(){
         //given
-        initDatabaseByDefaultMockUserAndHisAssets();
+        init_database_by_default_mock_user_and_his_assets();
         var category = AssetCategory.OTHER;
 
         //when
@@ -82,7 +82,7 @@ public class AssetServiceIntegrationTest {
         assertThat(entity.getCategory()).isEqualTo(category);
     }
 
-    private UserEntity initDefaultMockUserInDatabase(){
+    private UserEntity init_default_mock_user_in_database(){
         var user = new UserEntity();
         user.setUsername("user123");
         user.setPassword("123user");
@@ -90,8 +90,8 @@ public class AssetServiceIntegrationTest {
         return userRepository.save(user);
     }
 
-    private void initDatabaseByDefaultMockUserAndHisAssets() {
-        var userEntity = initDefaultMockUserInDatabase();
+    private void init_database_by_default_mock_user_and_his_assets() {
+        var userEntity = init_default_mock_user_in_database();
         AssetEntity entity1 = new AssetEntityBuilder()
                 .withAmount(new BigDecimal(10))
                 .withInsuranceDate(Instant.now())
@@ -114,7 +114,7 @@ public class AssetServiceIntegrationTest {
         assetsRepository.saveAll(Arrays.asList(entity1, entity2, entity3));
     }
 
-    private UserEntity initSecondMockUserInDatabase(){
+    private UserEntity init_second_mock_user_in_database(){
         var user = new UserEntity();
         user.setUsername("secondUser123");
         user.setPassword("123SecondUser");
@@ -122,8 +122,8 @@ public class AssetServiceIntegrationTest {
         return userRepository.save(user);
     }
 
-    private void initDatabaseBySecondMockUserAndHisAssets() {
-        var userEntity = initSecondMockUserInDatabase();
+    private void init_database_by_second_mock_user_and_his_assets() {
+        var userEntity = init_second_mock_user_in_database();
         AssetEntity entity1 = new AssetEntityBuilder()
                 .withAmount(new BigDecimal(10))
                 .withInsuranceDate(Instant.now())

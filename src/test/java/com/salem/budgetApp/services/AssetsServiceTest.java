@@ -49,7 +49,7 @@ public class AssetsServiceTest {
     }
 
     @Test
-    void shouldReturnListWithOneElementIfThereIsOneElementInDatabase(){
+    void should_return_list_with_one_element_if_there_is_one_element_in_database(){
         //given
         var asset = BigDecimal.ONE;
         AssetEntity assetEntity = new AssetEntityBuilder()
@@ -68,7 +68,7 @@ public class AssetsServiceTest {
     }
 
     @Test
-    void shouldReturnListWithTwoElementsIfThereWasTwoElementsInDatabase(){
+    void should_return_list_with_two_elements_if_there_was_two_elements_in_database(){
         //given
         var asset1 = BigDecimal.ONE;
         var asset2 = new BigDecimal("2");
@@ -94,7 +94,7 @@ public class AssetsServiceTest {
     }
 
     @Test
-    void shouldVerifyIfTheRepositorySaveWasCalledOneTime(){
+    void should_verify_if_the_repository_save_was_called_one_time(){
         //given
         BigDecimal asset = BigDecimal.ONE;
         Instant incomeDate = Instant.now();
@@ -114,7 +114,7 @@ public class AssetsServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAmountInAssetDtoIsNull(){
+    void should_throw_exception_when_amount_in_assetDto_is_null(){
         //given
         AssetDto dto = new AssetDtoBuilder()
                 .withIncomeDate(Instant.now())
@@ -128,7 +128,7 @@ public class AssetsServiceTest {
     }
 
     @Test
-    void shouldVerifyIfTheRepositoryUpdateWasCalled(){
+    void should_verify_if_the_repository_update_was_called(){
         //given
         BigDecimal asset = BigDecimal.ONE;
         var dto = new AssetDtoBuilder().withAmount(asset).build();
@@ -143,7 +143,7 @@ public class AssetsServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenIncomeDateInAssetDtoIsNull(){
+    void should_throw_exception_when_IncomeDate_in_assetDto_is_null(){
         //given
         BigDecimal asset = BigDecimal.ONE;
         AssetDto dto = new AssetDtoBuilder()
@@ -158,7 +158,7 @@ public class AssetsServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenIncomdeDateAndAmountInAssetDtoIsNull(){
+    void should_throw_exception_when_IncomeDate_and_amount_in_assetDto_is_null(){
         //given
         AssetDto dto = new AssetDto();
         String messageSeparator = ", ";
