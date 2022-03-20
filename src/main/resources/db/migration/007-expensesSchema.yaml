@@ -22,7 +22,7 @@ databaseChangeLog:
                   name: category
                   type: text
               - column:
-                  name: user-id
+                  name: user_id
                   type: uuid
                   constraints:
                     nullable: false
