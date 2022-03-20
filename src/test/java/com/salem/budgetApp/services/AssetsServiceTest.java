@@ -9,7 +9,6 @@ import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
 import com.salem.budgetApp.validators.AssetValidator;
-import liquibase.pro.packaged.A;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.User;
 
 import java.math.BigDecimal;
 import java.time.Instant;

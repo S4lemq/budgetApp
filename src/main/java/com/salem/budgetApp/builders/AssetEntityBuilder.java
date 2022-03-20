@@ -3,7 +3,6 @@ package com.salem.budgetApp.builders;
 import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
-import com.salem.budgetApp.services.dtos.AssetDto;
 
 import java.math.BigDecimal;
 import java.time.Instant;

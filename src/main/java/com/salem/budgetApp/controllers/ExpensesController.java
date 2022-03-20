@@ -2,11 +2,9 @@ package com.salem.budgetApp.controllers;
 
 import com.salem.budgetApp.services.ExpensesService;
 import com.salem.budgetApp.services.dtos.ExpensesDto;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/expenses")

@@ -6,7 +6,6 @@ import com.salem.budgetApp.mappers.UserMapper;
 import com.salem.budgetApp.repositories.UserRepository;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.UserDetailsDto;
-import org.apache.juli.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.User;

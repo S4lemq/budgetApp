@@ -5,7 +5,6 @@ import com.salem.budgetApp.builders.AssetEntityBuilder;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
-import org.springframework.objenesis.Objenesis;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;

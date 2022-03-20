@@ -1,6 +1,5 @@
 package com.salem.budgetApp.repositories;
 
-import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
