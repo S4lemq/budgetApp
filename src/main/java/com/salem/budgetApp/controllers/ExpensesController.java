@@ -36,4 +36,10 @@ public class ExpensesController {
         expensesService.deleteExpenses(dto);
     }
 
+    @GetMapping("/filter")
+    public List<ExpensesDto> getAllExpensesBetweenDate(@RequestParam("from") String fromDate,
+                                          @RequestParam("to") String toDate){
+        return expensesService.getAllExpensesBetweenDate(fromDate,toDate);
+    }
+
 }

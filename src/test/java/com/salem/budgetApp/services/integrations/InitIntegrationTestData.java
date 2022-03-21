@@ -23,6 +23,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 
@@ -188,6 +189,19 @@ public abstract class InitIntegrationTestData {
                 .build();
 
         expensesRepository.saveAll(asList(expense1, expense2, expense3));
+    }
+
+    protected UUID initDatabaseByExpenses(UserEntity user, String date){
+        var dateSuffix = "T00:00:00.001Z";
+
+        ExpensesEntity expensesEntity = new ExpensesEntityBuilder()
+                .withUser(user)
+                .withAmount(BigDecimal.ONE)
+                .withPurchaseDate(Instant.parse(date + dateSuffix))
+                .build();
+
+        var entity = expensesRepository.save(expensesEntity);
+        return entity.getId();
     }
 
 

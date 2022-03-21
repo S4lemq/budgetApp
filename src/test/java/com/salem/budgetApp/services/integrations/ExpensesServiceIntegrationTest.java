@@ -95,4 +95,30 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
                 .collect(Collectors.toList());
         assertThat(expensesRepository.findAll()).isEqualTo(DBWithoutDeletedExpenses);
     }
+
+    @Test
+    void should_return_all_expenses_saved_in_database_after() {
+        //given
+        var fromDate = "2022-03-01";
+        var toDate = "2022-03-21";
+        var middleDate = "2022-03-10";
+        var notInRangeDate = "2022-03-30";
+        var user = initDatabaseByPrimeUser();
+        initDatabaseByExpenses(user, fromDate);
+        initDatabaseByExpenses(user, toDate);
+        initDatabaseByExpenses(user, middleDate);
+        initDatabaseByExpenses(user, notInRangeDate);
+
+        //when
+        var result = expensesService.getAllExpensesBetweenDate(fromDate,toDate);
+
+        //then
+        assertThat(result).hasSize(3);
+        var dateAsString = result.stream()
+                .map(dto -> dto.getPurchaseDate().toString().substring(0,fromDate.length()))
+                .collect(Collectors.toList());
+        assertThat(dateAsString)
+                .contains(fromDate,toDate,middleDate)
+                .doesNotContain(notInRangeDate);
+    }
 }
