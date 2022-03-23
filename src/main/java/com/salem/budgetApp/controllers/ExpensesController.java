@@ -5,6 +5,7 @@ import com.salem.budgetApp.services.dtos.ExpensesDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/expenses")
@@ -37,9 +38,8 @@ public class ExpensesController {
     }
 
     @GetMapping("/filter")
-    public List<ExpensesDto> getAllExpensesBetweenDate(@RequestParam("from") String fromDate,
-                                          @RequestParam("to") String toDate){
-        return expensesService.getAllExpensesBetweenDate(fromDate,toDate);
+    public List<ExpensesDto> getAllExpensesBetweenDate(@RequestParam Map<String, String> filter){
+        return expensesService.getFilteredExpenses(filter);
     }
 
 }

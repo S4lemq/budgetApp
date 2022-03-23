@@ -85,7 +85,7 @@ public class AssetsService {
 
 
     private UserEntity getUserEntity() {
-        LOGGER.info("getLoggedUserEntity");
+        LOGGER.info("Get Logged User Entity");
         return userLogInfoService.getLoggedUserEntity();
     }
 }

@@ -1,5 +1,9 @@
 package com.salem.budgetApp.services;
 
+import com.salem.budgetApp.enums.ExpensesExceptionErrorMessages;
+import com.salem.budgetApp.enums.FilterExpensesParametersEnum;
+import com.salem.budgetApp.enums.MonthsEnum;
+import com.salem.budgetApp.exceptions.MissingExpensesFilterException;
 import com.salem.budgetApp.mappers.ExpensesMapper;
 import com.salem.budgetApp.repositories.ExpensesRepository;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
@@ -11,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,7 +88,68 @@ public class ExpensesService {
         LOGGER.info("Expense deleted");
     }
 
-    public List<ExpensesDto> getAllExpensesBetweenDate(String fromDate, String toDate) {
+    public List<ExpensesDto> getFilteredExpenses(Map<String, String> filter) {
+        if(isFilterForFromToDate(filter)){
+            return getAllExpensesBetweenDate(
+                    filter.get(FilterExpensesParametersEnum.FROM_DATE.getKey()),
+                    filter.get(FilterExpensesParametersEnum.TO_DATE.getKey())
+            );
+        }else if(isFilterForMonthYear(filter)){
+            MonthsEnum month = MonthsEnum.valueOf(filter.get(FilterExpensesParametersEnum.MONTH.getKey()).toUpperCase());
+            String year = filter.get(FilterExpensesParametersEnum.YEAR.getKey());
+            return getAllExpensesForMonthiInYear(month,year);
+        }
+
+        return Collections.emptyList();
+    }
+
+    private boolean isFilterForMonthYear(Map<String, String> filter) {
+        if(filter.containsKey(FilterExpensesParametersEnum.MONTH.getKey())
+                && !filter.containsKey(FilterExpensesParametersEnum.YEAR.getKey())){
+            throw new MissingExpensesFilterException(
+                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    "601D31F212E246F5AFAC5D607EB95312"
+            );
+        }
+        if(filter.containsKey(FilterExpensesParametersEnum.YEAR.getKey())
+                && !filter.containsKey(FilterExpensesParametersEnum.MONTH.getKey())){
+            throw new MissingExpensesFilterException(
+                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    "CA7CF6E80FCD434BA132A28CB91C449C"
+            );
+        }
+        return filter.containsKey(FilterExpensesParametersEnum.YEAR.getKey())
+                && filter.containsKey(FilterExpensesParametersEnum.MONTH.getKey());
+    }
+
+    private boolean isFilterForFromToDate(Map<String, String> filter) {
+        if(filter.containsKey(FilterExpensesParametersEnum.FROM_DATE.getKey())
+            && !filter.containsKey(FilterExpensesParametersEnum.TO_DATE.getKey())){
+            throw new MissingExpensesFilterException(
+                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    "375C506B154A434F9C8F97155D1F2CA7"
+            );
+        }
+        if(filter.containsKey(FilterExpensesParametersEnum.TO_DATE.getKey())
+            && !filter.containsKey(FilterExpensesParametersEnum.FROM_DATE.getKey())){
+            throw new MissingExpensesFilterException(
+                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    "06B1040B400C4B56ADCD649F764B9894"
+            );
+        }
+        return filter.containsKey(FilterExpensesParametersEnum.FROM_DATE.getKey())
+                && filter.containsKey(FilterExpensesParametersEnum.TO_DATE.getKey());
+    }
+
+    private List<ExpensesDto> getAllExpensesForMonthiInYear(MonthsEnum month, String year) {
+
+        String from = month.getFirstDayForYear(year);
+        String to = month.getLastDayForYear(year);
+
+        return getAllExpensesBetweenDate(from, to);
+    }
+
+    private List<ExpensesDto> getAllExpensesBetweenDate(String fromDate, String toDate) {
         LOGGER.info("Get All Expenses Between Date");
         LOGGER.debug("fromDate " + fromDate + " toDate " + toDate);
         var user = userLogInfoService.getLoggedUserEntity();
@@ -104,5 +169,4 @@ public class ExpensesService {
         LOGGER.info("getLoggedUserEntity");
         return userLogInfoService.getLoggedUserEntity();
     }
-
 }

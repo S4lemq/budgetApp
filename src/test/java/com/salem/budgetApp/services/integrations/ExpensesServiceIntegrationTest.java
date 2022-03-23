@@ -3,16 +3,26 @@ package com.salem.budgetApp.services.integrations;
 import com.salem.budgetApp.builders.ExpensesDtoBuilder;
 import com.salem.budgetApp.builders.ExpensesEntityBuilder;
 import com.salem.budgetApp.enums.ExpensesCategory;
+import com.salem.budgetApp.enums.ExpensesExceptionErrorMessages;
+import com.salem.budgetApp.enums.FilterExpensesParametersEnum;
+import com.salem.budgetApp.exceptions.MissingExpensesFilterException;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
 import com.salem.budgetApp.services.dtos.ExpensesDto;
 import org.assertj.core.util.Streams;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
@@ -97,7 +107,7 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
     }
 
     @Test
-    void should_return_all_expenses_saved_in_database_after() {
+    void should_return_all_expenses_saved_in_database_filter_by_date() {
         //given
         var fromDate = "2022-03-01";
         var toDate = "2022-03-21";
@@ -108,9 +118,13 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
         initDatabaseByExpenses(user, toDate);
         initDatabaseByExpenses(user, middleDate);
         initDatabaseByExpenses(user, notInRangeDate);
+        Map<String, String> filter = new HashMap<>(){{
+            put(FilterExpensesParametersEnum.FROM_DATE.getKey(), fromDate);
+            put(FilterExpensesParametersEnum.TO_DATE.getKey(), toDate);
+        }};
 
         //when
-        var result = expensesService.getAllExpensesBetweenDate(fromDate,toDate);
+        var result = expensesService.getFilteredExpenses(filter);
 
         //then
         assertThat(result).hasSize(3);
@@ -120,5 +134,31 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
         assertThat(dateAsString)
                 .contains(fromDate,toDate,middleDate)
                 .doesNotContain(notInRangeDate);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource
+    void should_throw_exception_when_one_of_the_filters_key(String testName, Map<String, String> filter) {
+        //given
+
+        //when
+        var result = assertThrows(MissingExpensesFilterException.class,
+                () -> expensesService.getFilteredExpenses(filter));
+
+        //then
+        assertThat(result.getMessage()).isEqualTo(ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage());
+    }
+
+    private static Stream<Arguments> should_throw_exception_when_one_of_the_filters_key(){
+        return Stream.of(
+                Arguments.of("test for missing " + FilterExpensesParametersEnum.TO_DATE.getKey(),
+                new HashMap<>(){{
+                    put(FilterExpensesParametersEnum.TO_DATE.getKey(), "2020-02-20");
+                }}),
+                Arguments.of("test for missing " + FilterExpensesParametersEnum.FROM_DATE.getKey(),
+                new HashMap<>(){{
+                    put(FilterExpensesParametersEnum.FROM_DATE.getKey(), "2020-02-20");
+                }})
+        );
     }
 }
