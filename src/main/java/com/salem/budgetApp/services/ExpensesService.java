@@ -107,14 +107,14 @@ public class ExpensesService {
         if(filter.containsKey(FilterExpensesParametersEnum.MONTH.getKey())
                 && !filter.containsKey(FilterExpensesParametersEnum.YEAR.getKey())){
             throw new MissingExpensesFilterException(
-                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    getMessageToException(FilterExpensesParametersEnum.YEAR.getKey()),
                     "601D31F212E246F5AFAC5D607EB95312"
             );
         }
         if(filter.containsKey(FilterExpensesParametersEnum.YEAR.getKey())
                 && !filter.containsKey(FilterExpensesParametersEnum.MONTH.getKey())){
             throw new MissingExpensesFilterException(
-                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    getMessageToException(FilterExpensesParametersEnum.MONTH.getKey()),
                     "CA7CF6E80FCD434BA132A28CB91C449C"
             );
         }
@@ -126,19 +126,23 @@ public class ExpensesService {
         if(filter.containsKey(FilterExpensesParametersEnum.FROM_DATE.getKey())
             && !filter.containsKey(FilterExpensesParametersEnum.TO_DATE.getKey())){
             throw new MissingExpensesFilterException(
-                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    getMessageToException(FilterExpensesParametersEnum.TO_DATE.getKey()),
                     "375C506B154A434F9C8F97155D1F2CA7"
             );
         }
         if(filter.containsKey(FilterExpensesParametersEnum.TO_DATE.getKey())
             && !filter.containsKey(FilterExpensesParametersEnum.FROM_DATE.getKey())){
             throw new MissingExpensesFilterException(
-                    ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage(),
+                    getMessageToException(FilterExpensesParametersEnum.FROM_DATE.getKey()),
                     "06B1040B400C4B56ADCD649F764B9894"
             );
         }
         return filter.containsKey(FilterExpensesParametersEnum.FROM_DATE.getKey())
                 && filter.containsKey(FilterExpensesParametersEnum.TO_DATE.getKey());
+    }
+
+    private String getMessageToException(String missingKey) {
+        return ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage() + missingKey;
     }
 
     private List<ExpensesDto> getAllExpensesForMonthiInYear(MonthsEnum month, String year) {
