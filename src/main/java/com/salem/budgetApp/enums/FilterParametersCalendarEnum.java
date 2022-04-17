@@ -1,6 +1,6 @@
 package com.salem.budgetApp.enums;
 
-public enum FilterExpensesParametersEnum {
+public enum FilterParametersCalendarEnum {
 
     FROM_DATE("from"),
     TO_DATE("to"),
@@ -9,7 +9,7 @@ public enum FilterExpensesParametersEnum {
 
     private final String key;
 
-    FilterExpensesParametersEnum(String key) {
+    FilterParametersCalendarEnum(String key) {
         this.key = key;
     }
 

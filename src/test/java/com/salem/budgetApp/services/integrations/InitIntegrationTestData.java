@@ -58,9 +58,18 @@ public abstract class InitIntegrationTestData {
     protected static final String USER_NAME_SECOND = "userNameSecond";
     protected static final String USER_PASSWORD_SECOND = "userPasswordSecond";
 
-    protected void initDatabaseByAssetsForUser(UserEntity userEntity) {
+    protected void initDatabaseByAssetsForUser(UserEntity userEntity, String date){
+        var suffixDate = "T00:00:00.001Z";
+        initDatabaseByAssetsForUser(userEntity, Instant.parse(date + suffixDate));
+    }
+
+    protected void initDatabaseByAssetsForUser(UserEntity userEntity){
+        initDatabaseByAssetsForUser(userEntity, Instant.now());
+    }
+
+    private void initDatabaseByAssetsForUser(UserEntity userEntity, Instant date) {
         var assetEntity = new AssetEntityBuilder()
-                .withInsuranceDate(Instant.now())
+                .withInsuranceDate(date)
                 .withUser(userEntity)
                 .withAmount(BigDecimal.ONE)
                 .withCategory(AssetCategory.BONUS)

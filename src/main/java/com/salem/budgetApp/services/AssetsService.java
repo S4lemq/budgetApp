@@ -1,8 +1,11 @@
 package com.salem.budgetApp.services;
 
 import com.salem.budgetApp.enums.AssetCategory;
+import com.salem.budgetApp.filters.AssetsFilterRange;
+import com.salem.budgetApp.filters.FilterRangeAbstract;
 import com.salem.budgetApp.mappers.AssetsMapper;
 import com.salem.budgetApp.repositories.AssetsRepository;
+import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
 import com.salem.budgetApp.validators.AssetValidator;
@@ -11,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,15 +26,18 @@ public class AssetsService {
     private final AssetsMapper assetsMapper;
     private final AssetValidator assetValidator;
     private final UserLogInfoService userLogInfoService;
+    private final FilterRangeAbstract<AssetEntity> filterRange;
 
     public AssetsService(AssetsRepository assetsRepository,
                          AssetsMapper assetsMapper,
                          AssetValidator assetValidator,
-                         UserLogInfoService userLogInfoService) {
+                         UserLogInfoService userLogInfoService,
+                         AssetsFilterRange filterRange) {
         this.assetsRepository = assetsRepository;
         this.assetsMapper = assetsMapper;
         this.assetValidator = assetValidator;
         this.userLogInfoService = userLogInfoService;
+        this.filterRange = filterRange;
     }
 
     public List<AssetDto> getAllAssets(){
@@ -83,9 +90,18 @@ public class AssetsService {
                 .collect(Collectors.toList());
     }
 
+    public List<AssetDto> getAssetsByFilter(Map<String, String> filter) {
+        var user = userLogInfoService.getLoggedUserEntity();
+        return filterRange.getAllByFilter(filter, user)
+                .stream()
+                .map(entity -> assetsMapper.fromEntityToDto(entity))
+                .collect(Collectors.toList());
+    }
 
     private UserEntity getUserEntity() {
         LOGGER.info("Get Logged User Entity");
         return userLogInfoService.getLoggedUserEntity();
     }
+
+
 }

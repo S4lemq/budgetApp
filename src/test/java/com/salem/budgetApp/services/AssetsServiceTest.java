@@ -4,6 +4,7 @@ import com.salem.budgetApp.builders.AssetDtoBuilder;
 import com.salem.budgetApp.builders.AssetEntityBuilder;
 import com.salem.budgetApp.enums.ValidatorsAssetEnum;
 import com.salem.budgetApp.exceptions.AssetIncompleteException;
+import com.salem.budgetApp.filters.AssetsFilterRange;
 import com.salem.budgetApp.mappers.AssetsMapper;
 import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
@@ -35,6 +36,8 @@ public class AssetsServiceTest {
     private AssetsRepository assetsRepository;
     @Mock
     private UserLogInfoService userLogInfoService;
+    @Mock
+    private AssetsFilterRange assetsFilterRange;
 
     private AssetsMapper assetsMapper = new AssetsMapper();
     private AssetValidator assetValidator = new AssetValidator();
@@ -43,7 +46,11 @@ public class AssetsServiceTest {
 
     @BeforeEach
     public void init(){
-        service = new AssetsService(assetsRepository, assetsMapper, assetValidator, userLogInfoService);
+        service = new AssetsService(assetsRepository,
+                assetsMapper,
+                assetValidator,
+                userLogInfoService,
+                assetsFilterRange);
     }
 
     @Test

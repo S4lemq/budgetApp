@@ -3,8 +3,8 @@ package com.salem.budgetApp.services.integrations;
 import com.salem.budgetApp.builders.ExpensesDtoBuilder;
 import com.salem.budgetApp.builders.ExpensesEntityBuilder;
 import com.salem.budgetApp.enums.ExpensesCategory;
-import com.salem.budgetApp.enums.ExpensesExceptionErrorMessages;
-import com.salem.budgetApp.enums.FilterExpensesParametersEnum;
+import com.salem.budgetApp.enums.FilterExceptionErrorMessages;
+import com.salem.budgetApp.enums.FilterParametersCalendarEnum;
 import com.salem.budgetApp.enums.MonthsEnum;
 import com.salem.budgetApp.exceptions.MissingExpensesFilterException;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
@@ -120,8 +120,8 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
         initDatabaseByExpenses(user, middleDate);
         initDatabaseByExpenses(user, notInRangeDate);
         Map<String, String> filter = new HashMap<>(){{
-            put(FilterExpensesParametersEnum.FROM_DATE.getKey(), fromDate);
-            put(FilterExpensesParametersEnum.TO_DATE.getKey(), toDate);
+            put(FilterParametersCalendarEnum.FROM_DATE.getKey(), fromDate);
+            put(FilterParametersCalendarEnum.TO_DATE.getKey(), toDate);
         }};
 
         //when
@@ -150,8 +150,8 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
         initDatabaseByExpenses(user, middleDate);
         initDatabaseByExpenses(user, notInRangeDate);
         Map<String, String> filter = new HashMap<>(){{
-            put(FilterExpensesParametersEnum.MONTH.getKey(), MonthsEnum.MARCH.name());
-            put(FilterExpensesParametersEnum.YEAR.getKey(), "2022");
+            put(FilterParametersCalendarEnum.MONTH.getKey(), MonthsEnum.MARCH.name());
+            put(FilterParametersCalendarEnum.YEAR.getKey(), "2022");
         }};
 
         //when
@@ -168,10 +168,73 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
     }
 
 
+    @Test
+    void should_get_all_assets_by_filter_by_date_from_to() {
+        //given
+        var fromDate = "2022-03-01";
+        var toDate = "2022-03-30";
+        var middleDate = "2022-03-15";
+        var outOfRangeDate = "2022-04-17";
+        var user = initDatabaseByPrimeUser();
+        initDatabaseByAssetsForUser(user, fromDate);
+        initDatabaseByAssetsForUser(user, toDate);
+        initDatabaseByAssetsForUser(user, middleDate);
+        initDatabaseByAssetsForUser(user, outOfRangeDate);
+
+        Map<String, String> filter = new HashMap<>() {{
+            put(FilterParametersCalendarEnum.FROM_DATE.getKey(), fromDate);
+            put(FilterParametersCalendarEnum.TO_DATE.getKey(), toDate);
+        }};
+
+        //when
+        var result = assetsService.getAssetsByFilter(filter);
+
+        //then
+        assertThat(result).hasSize(3);
+        var dateAsString = result.stream()
+                .map(dto -> dto.getIncomeDate().toString().substring(0, fromDate.length()))
+                .collect(Collectors.toList());
+        assertThat(dateAsString).hasSize(3)
+                .contains(fromDate, toDate, middleDate)
+                .doesNotContain(outOfRangeDate);
+    }
+
+    @Test
+    void should_get_all_assets_by_filter_by_month_year() {
+        //given
+        var fromDate = "2022-03-01";
+        var toDate = "2022-03-30";
+        var middleDate = "2022-03-15";
+        var outOfRangeDate = "2022-04-17";
+        var user = initDatabaseByPrimeUser();
+        initDatabaseByAssetsForUser(user, fromDate);
+        initDatabaseByAssetsForUser(user, toDate);
+        initDatabaseByAssetsForUser(user, middleDate);
+        initDatabaseByAssetsForUser(user, outOfRangeDate);
+
+        Map<String, String> filter = new HashMap<>() {{
+            put(FilterParametersCalendarEnum.MONTH.getKey(), MonthsEnum.MARCH.name());
+            put(FilterParametersCalendarEnum.YEAR.getKey(), "2022");
+        }};
+
+        //when
+        var result = assetsService.getAssetsByFilter(filter);
+
+        //then
+        assertThat(result).hasSize(3);
+        var dateAsString = result.stream()
+                .map(dto -> dto.getIncomeDate().toString().substring(0, fromDate.length()))
+                .collect(Collectors.toList());
+        assertThat(dateAsString).hasSize(3)
+                .contains(fromDate, toDate, middleDate)
+                .doesNotContain(outOfRangeDate);
+    }
+
     @ParameterizedTest(name = "{0}")
     @MethodSource
     void should_throw_exception_when_one_of_the_filters_key(String testName, ParameterTestData testData) {
         //given
+        initDatabaseByPrimeUser();
 
         //when
         var result = assertThrows(MissingExpensesFilterException.class,
@@ -179,39 +242,39 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
 
         //then
         assertThat(result.getMessage())
-                .isEqualTo(ExpensesExceptionErrorMessages.MISSING_FILTER_KEY.getMessage() + testData.missingKey.getKey());
+                .isEqualTo(FilterExceptionErrorMessages.MISSING_EXPENSES_FILTER_KEY.getMessage(testData.missingKey.getKey()));
     }
 
     private static Stream<Arguments> should_throw_exception_when_one_of_the_filters_key(){
         return Stream.of(
-                Arguments.of("test for missing " + FilterExpensesParametersEnum.TO_DATE.getKey(),
+                Arguments.of("test for missing " + FilterParametersCalendarEnum.TO_DATE.getKey(),
                     new ParameterTestData(
                         new HashMap<>(){{
-                                put(FilterExpensesParametersEnum.TO_DATE.getKey(), "2020-02-20");
+                                put(FilterParametersCalendarEnum.TO_DATE.getKey(), "2020-02-20");
                             }},
-                            FilterExpensesParametersEnum.FROM_DATE)
+                            FilterParametersCalendarEnum.FROM_DATE)
                 ),
 
-                Arguments.of("test for missing " + FilterExpensesParametersEnum.FROM_DATE.getKey(),
+                Arguments.of("test for missing " + FilterParametersCalendarEnum.FROM_DATE.getKey(),
                     new ParameterTestData(
                             new HashMap<>(){{
-                                put(FilterExpensesParametersEnum.FROM_DATE.getKey(), "2020-02-20");
+                                put(FilterParametersCalendarEnum.FROM_DATE.getKey(), "2020-02-20");
                             }},
-                            FilterExpensesParametersEnum.TO_DATE)
+                            FilterParametersCalendarEnum.TO_DATE)
                 ),
-                Arguments.of("test for missing " + FilterExpensesParametersEnum.MONTH.getKey(),
+                Arguments.of("test for missing " + FilterParametersCalendarEnum.MONTH.getKey(),
                         new ParameterTestData(
                                 new HashMap<>(){{
-                                    put(FilterExpensesParametersEnum.MONTH.getKey(), "january");
+                                    put(FilterParametersCalendarEnum.MONTH.getKey(), "january");
                                 }},
-                                FilterExpensesParametersEnum.YEAR)
+                                FilterParametersCalendarEnum.YEAR)
                 ),
-                Arguments.of("test for missing " + FilterExpensesParametersEnum.YEAR.getKey(),
+                Arguments.of("test for missing " + FilterParametersCalendarEnum.YEAR.getKey(),
                         new ParameterTestData(
                                 new HashMap<>(){{
-                                    put(FilterExpensesParametersEnum.YEAR.getKey(), "2020-02-20");
+                                    put(FilterParametersCalendarEnum.YEAR.getKey(), "2020-02-20");
                                 }},
-                                FilterExpensesParametersEnum.MONTH)
+                                FilterParametersCalendarEnum.MONTH)
                 )
         );
     }
@@ -219,9 +282,9 @@ public class ExpensesServiceIntegrationTest extends InitIntegrationTestData{
     private static class ParameterTestData{
 
         public Map<String, String> filter;
-        public FilterExpensesParametersEnum missingKey;
+        public FilterParametersCalendarEnum missingKey;
 
-        public ParameterTestData(Map<String, String> filter, FilterExpensesParametersEnum missingKey) {
+        public ParameterTestData(Map<String, String> filter, FilterParametersCalendarEnum missingKey) {
             this.filter = filter;
             this.missingKey = missingKey;
         }

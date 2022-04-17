@@ -1,7 +1,5 @@
 package com.salem.budgetApp.exceptions;
 
-import com.salem.budgetApp.enums.ExpensesExceptionErrorMessages;
-
 public class MissingExpensesFilterException extends RuntimeException{
 
     private String errorCode;
