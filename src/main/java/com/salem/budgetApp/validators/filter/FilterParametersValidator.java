@@ -1,10 +1,10 @@
-package com.salem.budgetApp.validators;
+package com.salem.budgetApp.validators.filter;
 
 import com.salem.budgetApp.enums.FilterParametersCalendarEnum;
 
 import java.util.Map;
 
-public abstract class FilterParametersValidator {
+abstract class FilterParametersValidator {
 
     public void asserFilter(Map<String, String> filter){
         checkIfMonthExistYearMissing(filter, "601D31F212E246F5AFAC5D607EB95312");

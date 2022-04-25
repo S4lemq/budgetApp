@@ -1,7 +1,7 @@
 package com.salem.budgetApp.services;
 
-import com.salem.budgetApp.filters.ExpensesFilterRange;
-import com.salem.budgetApp.filters.FilterRangeAbstract;
+import com.salem.budgetApp.enums.FilterSpecification;
+import com.salem.budgetApp.filters.FilterRangeStrategy;
 import com.salem.budgetApp.mappers.ExpensesMapper;
 import com.salem.budgetApp.repositories.ExpensesRepository;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
@@ -25,16 +25,16 @@ public class ExpensesService {
     private final ExpensesRepository expensesRepository;
     private final ExpensesMapper expensesMapper;
     private final UserLogInfoService userLogInfoService;
-    private final FilterRangeAbstract<ExpensesEntity> filterRange;
+    private final FilterRangeStrategy<ExpensesEntity> filterRangeStrategy;
 
     public ExpensesService(ExpensesRepository expensesRepository,
                            ExpensesMapper expensesMapper,
                            UserLogInfoService userLogInfoService,
-                           ExpensesFilterRange filterRange) {
+                           FilterRangeStrategy filterRangeStrategy) {
         this.expensesRepository = expensesRepository;
         this.expensesMapper = expensesMapper;
         this.userLogInfoService = userLogInfoService;
-        this.filterRange = filterRange;
+        this.filterRangeStrategy = filterRangeStrategy;
     }
 
     public void setExpenses(ExpensesDto dto) {
@@ -89,8 +89,9 @@ public class ExpensesService {
 
     public List<ExpensesDto> getFilteredExpenses(Map<String, String> filter) {
         var user = userLogInfoService.getLoggedUserEntity();
+        FilterSpecification specification = FilterSpecification.FOR_EXPENSES;
 
-        return filterRange.getAllByFilter(filter, user)
+        return filterRangeStrategy.getFilteredDataForSpecification(filter, specification, user)
                 .stream()
                 .map(expensesMapper::fromEntityToDto)
                 .collect(Collectors.toList());

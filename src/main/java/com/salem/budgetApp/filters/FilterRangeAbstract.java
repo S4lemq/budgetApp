@@ -1,34 +1,28 @@
 package com.salem.budgetApp.filters;
 
 import com.salem.budgetApp.enums.FilterParametersCalendarEnum;
+import com.salem.budgetApp.enums.FilterSpecification;
 import com.salem.budgetApp.enums.MonthsEnum;
 import com.salem.budgetApp.repositories.entities.UserEntity;
-import com.salem.budgetApp.validators.AssetsFilterParametersValidator;
-import com.salem.budgetApp.validators.ExpensesFilterParametersValidator;
+import com.salem.budgetApp.validators.filter.FilterStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public abstract class FilterRangeAbstract<T> {
+abstract class FilterRangeAbstract<T> {
 
     @Autowired
-    private ExpensesFilterParametersValidator expensesFilterParametersValidator;
-    @Autowired
-    private AssetsFilterParametersValidator assetsFilterParametersValidator;
+    private FilterStrategy filterStrategy;
 
     private static final String DATE_SUFFIX = "T00:00:00.001Z";
 
-    public List<T> getAllByFilter(Map<String, String> filter, UserEntity user){
+    public List<T> getAllByFilter(Map<String, String> filter, UserEntity user, FilterSpecification specification){
 
-        if("ExpensesFilter".equals(getFilterName())){
-            expensesFilterParametersValidator.asserFilter(filter);
-        }
-        if("AssetsFilter".equals(getFilterName())){
-            assetsFilterParametersValidator.asserFilter(filter);
-        }
+        filterStrategy.checkFilterForSpecification(filter, specification);
 
         if(isFilterForFromToDate(filter)) {
             var fromDate = filter.get(FilterParametersCalendarEnum.FROM_DATE.getKey());
@@ -68,7 +62,5 @@ public abstract class FilterRangeAbstract<T> {
     }
 
     protected abstract List<T> getAllEntityBetweenDate(UserEntity user, Instant fromDate, Instant toDate);
-
-    protected abstract String getFilterName();
 
 }

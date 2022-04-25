@@ -1,8 +1,8 @@
 package com.salem.budgetApp.services;
 
 import com.salem.budgetApp.enums.AssetCategory;
-import com.salem.budgetApp.filters.AssetsFilterRange;
-import com.salem.budgetApp.filters.FilterRangeAbstract;
+import com.salem.budgetApp.enums.FilterSpecification;
+import com.salem.budgetApp.filters.FilterRangeStrategy;
 import com.salem.budgetApp.mappers.AssetsMapper;
 import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
@@ -26,18 +26,18 @@ public class AssetsService {
     private final AssetsMapper assetsMapper;
     private final AssetValidator assetValidator;
     private final UserLogInfoService userLogInfoService;
-    private final FilterRangeAbstract<AssetEntity> filterRange;
+    private final FilterRangeStrategy<AssetEntity> filterRangeStrategy;
 
     public AssetsService(AssetsRepository assetsRepository,
                          AssetsMapper assetsMapper,
                          AssetValidator assetValidator,
                          UserLogInfoService userLogInfoService,
-                         AssetsFilterRange filterRange) {
+                         FilterRangeStrategy filterRangeStrategy) {
         this.assetsRepository = assetsRepository;
         this.assetsMapper = assetsMapper;
         this.assetValidator = assetValidator;
         this.userLogInfoService = userLogInfoService;
-        this.filterRange = filterRange;
+        this.filterRangeStrategy = filterRangeStrategy;
     }
 
     public List<AssetDto> getAllAssets(){
@@ -92,7 +92,9 @@ public class AssetsService {
 
     public List<AssetDto> getAssetsByFilter(Map<String, String> filter) {
         var user = userLogInfoService.getLoggedUserEntity();
-        return filterRange.getAllByFilter(filter, user)
+        FilterSpecification specification = FilterSpecification.FOR_ASSETS;
+
+        return filterRangeStrategy.getFilteredDataForSpecification(filter, specification, user)
                 .stream()
                 .map(entity -> assetsMapper.fromEntityToDto(entity))
                 .collect(Collectors.toList());

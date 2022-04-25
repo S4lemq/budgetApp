@@ -1,11 +1,11 @@
-package com.salem.budgetApp.validators;
+package com.salem.budgetApp.validators.filter;
 
 import com.salem.budgetApp.enums.FilterExceptionErrorMessages;
 import com.salem.budgetApp.exceptions.MissingExpensesFilterException;
 import org.springframework.stereotype.Component;
 
-@Component
-public class ExpensesFilterParametersValidator extends FilterParametersValidator{
+@Component("forExpensesValidator")
+class ExpensesFilterParametersValidator extends FilterParametersValidator {
 
     @Override
     public void throwException(String missingKey, String errorCode) {
