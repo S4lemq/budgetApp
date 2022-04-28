@@ -60,19 +60,24 @@ public abstract class InitIntegrationTestData {
 
     protected void initDatabaseByAssetsForUser(UserEntity userEntity, String date){
         var suffixDate = "T00:00:00.001Z";
-        initDatabaseByAssetsForUser(userEntity, Instant.parse(date + suffixDate));
+        initDatabaseByAssetsForUser(userEntity, Instant.parse(date + suffixDate), AssetCategory.BONUS);
+    }
+
+    protected void initDatabaseByAssetsForUser(UserEntity userEntity, String date, AssetCategory category){
+        var suffixDate = "T00:00:00.001Z";
+        initDatabaseByAssetsForUser(userEntity, Instant.parse(date + suffixDate), category);
     }
 
     protected void initDatabaseByAssetsForUser(UserEntity userEntity){
-        initDatabaseByAssetsForUser(userEntity, Instant.now());
+        initDatabaseByAssetsForUser(userEntity, Instant.now(), AssetCategory.BONUS);
     }
 
-    private void initDatabaseByAssetsForUser(UserEntity userEntity, Instant date) {
+    private void initDatabaseByAssetsForUser(UserEntity userEntity, Instant date, AssetCategory category) {
         var assetEntity = new AssetEntityBuilder()
                 .withInsuranceDate(date)
                 .withUser(userEntity)
                 .withAmount(BigDecimal.ONE)
-                .withCategory(AssetCategory.BONUS)
+                .withCategory(category)
                 .build();
 
         assetRepository.save(assetEntity);

@@ -22,6 +22,14 @@ public interface AssetsRepository extends JpaRepository<AssetEntity, UUID> {
     void deleteAllByUser(UserEntity userEntity);
 
     @Query("SELECT e FROM AssetEntity e" +
-            " WHERE e.user = :user AND e.incomeDate >= :fromDate AND e.incomeDate <= :toDate")
-    List<AssetEntity> findAllBetweenDate(UserEntity user, Instant fromDate, Instant toDate);
+            " WHERE e.user = :user " +
+            "AND e.incomeDate >= :fromDate " +
+            "AND e.incomeDate <= :toDate" +
+            " AND e.category in (:categories)")
+    List<AssetEntity> findAllBetweenDate(UserEntity user,
+                                         Instant fromDate,
+                                         Instant toDate,
+                                         List<AssetCategory> categories);
+
+
 }

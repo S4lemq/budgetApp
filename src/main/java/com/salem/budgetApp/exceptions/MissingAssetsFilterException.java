@@ -1,15 +1,9 @@
 package com.salem.budgetApp.exceptions;
 
-public class MissingAssetsFilterException extends RuntimeException{
-
-    private final String errorCode;
+public class MissingAssetsFilterException extends BudgetMainException{
 
     public MissingAssetsFilterException(String message, String errorCode) {
-        super(message);
-        this.errorCode = errorCode;
+        super(message, errorCode);
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
 }

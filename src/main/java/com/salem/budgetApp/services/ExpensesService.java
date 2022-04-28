@@ -18,7 +18,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpensesService {
+public class
+ExpensesService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AssetsService.class.getName());
 

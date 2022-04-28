@@ -1,15 +1,9 @@
 package com.salem.budgetApp.exceptions;
 
-public class AssetIncompleteException extends RuntimeException{
-
-    private String errorCode;
+public class AssetIncompleteException extends BudgetMainException{
 
     public AssetIncompleteException(String message, String errorCode) {
-        super(message);
-        this.errorCode = errorCode;
+        super(message, errorCode);
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
 }

@@ -2,6 +2,7 @@ package com.salem.budgetApp.controllers.handlers;
 
 import com.salem.budgetApp.controllers.handlers.dtos.ErrorMessage;
 import com.salem.budgetApp.exceptions.AssetIncompleteException;
+import com.salem.budgetApp.exceptions.MissingAssetsFilterException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,6 +18,16 @@ public class AssetControllerExceptionHandler {
                 .withErrorCode(exception.getErrorCode())
                 .withErrorDescription(exception.getMessage())
                 .build();
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
+    public ErrorMessage missingAssetsFilerExceptionHandler(MissingAssetsFilterException exception){
+          return ErrorMessage.ErrorMessageBuilder.anErrorMessage()
+                  .withErrorDescription(exception.getMessage())
+                  .withErrorCode(exception.getErrorCode())
+                  .build();
     }
 
 }

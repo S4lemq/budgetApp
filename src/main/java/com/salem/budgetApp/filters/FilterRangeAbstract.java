@@ -1,6 +1,6 @@
 package com.salem.budgetApp.filters;
 
-import com.salem.budgetApp.enums.FilterParametersCalendarEnum;
+import com.salem.budgetApp.enums.FilterParametersEnum;
 import com.salem.budgetApp.enums.FilterSpecification;
 import com.salem.budgetApp.enums.MonthsEnum;
 import com.salem.budgetApp.repositories.entities.UserEntity;
@@ -25,42 +25,57 @@ abstract class FilterRangeAbstract<T> {
         filterStrategy.checkFilterForSpecification(filter, specification);
 
         if(isFilterForFromToDate(filter)) {
-            var fromDate = filter.get(FilterParametersCalendarEnum.FROM_DATE.getKey());
-            var toDate = filter.get(FilterParametersCalendarEnum.TO_DATE.getKey());
+            var fromDate = filter.get(FilterParametersEnum.FROM_DATE.getKey());
+            var toDate = filter.get(FilterParametersEnum.TO_DATE.getKey());
 
-            return getAllEntityBetweenDate(user, parseDateToInstant(fromDate), parseDateToInstant(toDate));
+            return getAllEntityBetweenDate(user,
+                    parseDateToInstant(fromDate),
+                    parseDateToInstant(toDate),
+                    filter.get(FilterParametersEnum.CATEGORY.getKey()));
 
         }else if(isFilterForMonthYear(filter)){
-            MonthsEnum month = MonthsEnum.valueOf(filter.get(FilterParametersCalendarEnum.MONTH.getKey()).toUpperCase());
-            String year = filter.get(FilterParametersCalendarEnum.YEAR.getKey());
-            return getAllExpensesForMonthInYear(user, month,year);
+            MonthsEnum month = MonthsEnum.valueOf(filter.get(FilterParametersEnum.MONTH.getKey()).toUpperCase());
+            String year = filter.get(FilterParametersEnum.YEAR.getKey());
+            return getAllExpensesForMonthInYear(user,
+                                                month,
+                                                year,
+                                                filter.get(FilterParametersEnum.CATEGORY.getKey()));
         }
 
         return Collections.emptyList();
     }
 
     private boolean isFilterForMonthYear(Map<String, String> filter) {
-        return filter.containsKey(FilterParametersCalendarEnum.YEAR.getKey())
-                && filter.containsKey(FilterParametersCalendarEnum.MONTH.getKey());
+        return filter.containsKey(FilterParametersEnum.YEAR.getKey())
+                && filter.containsKey(FilterParametersEnum.MONTH.getKey());
     }
 
     private boolean isFilterForFromToDate(Map<String, String> filter) {
-        return filter.containsKey(FilterParametersCalendarEnum.FROM_DATE.getKey())
-                && filter.containsKey(FilterParametersCalendarEnum.TO_DATE.getKey());
+        return filter.containsKey(FilterParametersEnum.FROM_DATE.getKey())
+                && filter.containsKey(FilterParametersEnum.TO_DATE.getKey());
     }
 
-    private List<T> getAllExpensesForMonthInYear(UserEntity user, MonthsEnum month, String year) {
+    private List<T> getAllExpensesForMonthInYear(UserEntity user,
+                                                 MonthsEnum month,
+                                                 String year,
+                                                 String category) {
 
         String from = month.getFirstDayForYear(year);
         String to = month.getLastDayForYear(year);
 
-        return getAllEntityBetweenDate(user,parseDateToInstant(from),parseDateToInstant(to));
+        return getAllEntityBetweenDate(user,
+                parseDateToInstant(from),
+                parseDateToInstant(to),
+                category);
     }
 
     private Instant parseDateToInstant(String date) {
         return Instant.parse(date + DATE_SUFFIX);
     }
 
-    protected abstract List<T> getAllEntityBetweenDate(UserEntity user, Instant fromDate, Instant toDate);
+    protected abstract List<T> getAllEntityBetweenDate(UserEntity user,
+                                                       Instant fromDate,
+                                                       Instant toDate,
+                                                       String category);
 
 }
