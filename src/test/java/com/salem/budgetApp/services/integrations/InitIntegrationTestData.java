@@ -8,10 +8,7 @@ import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.enums.ExpensesCategory;
 import com.salem.budgetApp.mappers.ExpensesMapper;
 import com.salem.budgetApp.mappers.PropertyMapper;
-import com.salem.budgetApp.repositories.AssetsRepository;
-import com.salem.budgetApp.repositories.ExpensesRepository;
-import com.salem.budgetApp.repositories.PropertyRepository;
-import com.salem.budgetApp.repositories.UserRepository;
+import com.salem.budgetApp.repositories.*;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
 import com.salem.budgetApp.repositories.entities.PropertyEntity;
@@ -63,6 +60,10 @@ public abstract class InitIntegrationTestData {
     protected PropertyRepository propertyRepository;
     @Autowired
     protected PropertyMapper propertyMapper;
+    @Autowired
+    protected RoomsService roomsService;
+    @Autowired
+    protected RoomsRepository roomsRepository;
 
     protected static final String USER_NAME_PRIME = "userNamePrime";
     protected static final String USER_PASSWORD_PRIME = "userPasswordPrime";
