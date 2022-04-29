@@ -2,22 +2,26 @@ package com.salem.budgetApp.services.integrations;
 
 import com.salem.budgetApp.builders.AssetEntityBuilder;
 import com.salem.budgetApp.builders.ExpensesEntityBuilder;
+import com.salem.budgetApp.builders.PropertyDtoBuilder;
+import com.salem.budgetApp.builders.PropertyEntityBuilder;
 import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.enums.ExpensesCategory;
 import com.salem.budgetApp.mappers.ExpensesMapper;
 import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.repositories.ExpensesRepository;
+import com.salem.budgetApp.repositories.PropertyRepository;
 import com.salem.budgetApp.repositories.UserRepository;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
+import com.salem.budgetApp.repositories.entities.PropertyEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
-import com.salem.budgetApp.services.AssetsService;
-import com.salem.budgetApp.services.ExpensesService;
-import com.salem.budgetApp.services.JWTService;
-import com.salem.budgetApp.services.UserDetailsServiceImpl;
+import com.salem.budgetApp.services.*;
+import com.salem.budgetApp.services.dtos.PropertyDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import javax.transaction.Transactional;
@@ -52,6 +56,10 @@ public abstract class InitIntegrationTestData {
     protected AuthenticationManager authenticationManager;
     @Autowired
     protected AssetsRepository assetRepository;
+    @Autowired
+    protected PropertyService propertyService;
+    @Autowired
+    protected PropertyRepository propertyRepository;
 
     protected static final String USER_NAME_PRIME = "userNamePrime";
     protected static final String USER_PASSWORD_PRIME = "userPasswordPrime";
@@ -216,6 +224,28 @@ public abstract class InitIntegrationTestData {
 
         var entity = expensesRepository.save(expensesEntity);
         return entity.getId();
+    }
+
+    protected void initDatabaseByProperty(UserEntity user){
+        var postCode = "70-649";
+        var city = "Poznan";
+        var street = "Hetmanska";
+        var house = "12A";
+        var single = false;
+        var rooms = 3;
+
+        PropertyEntity property = new PropertyEntityBuilder()
+                .withPostCode(postCode)
+                .withCity(city)
+                .withStreet(street)
+                .withHouse(house)
+                .withSingle(single)
+                .withRooms(rooms)
+                .withUser(user)
+                .build();
+
+        propertyRepository.save(property);
+
     }
 
 
