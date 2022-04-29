@@ -11,29 +11,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "expenses")
-public class ExpensesEntity {
-    @Id
-    @Column(name = "id", updatable = false, nullable = false)
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    private UUID id;
+public class ExpensesEntity extends BaseBudgetEntity{
+
     private BigDecimal amount;
     private Instant purchaseDate;
     @Enumerated(EnumType.STRING)
     private ExpensesCategory category;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserEntity user;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public BigDecimal getAmount() {
         return amount;
@@ -59,35 +43,13 @@ public class ExpensesEntity {
         this.category = category;
     }
 
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExpensesEntity that = (ExpensesEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user);
-    }
 
     @Override
     public String toString() {
         return "ExpensesEntity{" +
-                "id=" + id +
-                ", amount=" + amount +
+                "amount=" + amount +
                 ", purchaseDate=" + purchaseDate +
                 ", category=" + category +
-                ", user=" + user +
                 '}';
     }
 }

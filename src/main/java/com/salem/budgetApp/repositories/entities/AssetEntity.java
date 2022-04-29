@@ -11,31 +11,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "assets")
-public class AssetEntity {
+public class AssetEntity extends BaseBudgetEntity{
 
-    @Id
-    @Column(name = "id", updatable = false, nullable = false)
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    private UUID id;
     private BigDecimal amount;
     private Instant incomeDate;
     @Enumerated(EnumType.STRING)
     private AssetCategory category;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserEntity user;
     private String description;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public BigDecimal getAmount() {
         return amount;
@@ -61,14 +43,6 @@ public class AssetEntity {
         this.category = category;
     }
 
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -78,26 +52,11 @@ public class AssetEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AssetEntity entity = (AssetEntity) o;
-        return Objects.equals(id, entity.id) && Objects.equals(user, entity.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user);
-    }
-
-    @Override
     public String toString() {
         return "AssetEntity{" +
-                "id=" + id +
-                ", amount=" + amount +
+                "amount=" + amount +
                 ", incomeDate=" + incomeDate +
                 ", category=" + category +
-                ", user=" + user +
                 ", description='" + description + '\'' +
                 '}';
     }

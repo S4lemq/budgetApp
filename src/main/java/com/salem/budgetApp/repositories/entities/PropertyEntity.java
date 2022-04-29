@@ -8,32 +8,14 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "property")
-public class PropertyEntity {
+public class PropertyEntity extends BaseBudgetEntity{
 
-    @Id
-    @Column(name = "id", updatable = false, nullable = false)
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    private UUID id;
     private Integer rooms;
     private Boolean single;
     private String city;
     private String postCode;
     private String street;
     private String house;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserEntity user;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public Integer getRooms() {
         return rooms;
@@ -83,38 +65,28 @@ public class PropertyEntity {
         this.house = house;
     }
 
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PropertyEntity that = (PropertyEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(city, that.city) && Objects.equals(postCode, that.postCode) && Objects.equals(street, that.street) && Objects.equals(house, that.house) && Objects.equals(user, that.user);
+        return Objects.equals(city, that.city) && Objects.equals(postCode, that.postCode) && Objects.equals(street, that.street) && Objects.equals(house, that.house);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, city, postCode, street, house, user);
+        return Objects.hash(city, postCode, street, house);
     }
 
     @Override
     public String toString() {
         return "PropertyEntity{" +
-                "id=" + id +
-                ", rooms=" + rooms +
+                "rooms=" + rooms +
                 ", single=" + single +
                 ", city='" + city + '\'' +
                 ", postCode='" + postCode + '\'' +
                 ", street='" + street + '\'' +
                 ", house='" + house + '\'' +
-                ", user=" + user +
                 '}';
     }
 }
