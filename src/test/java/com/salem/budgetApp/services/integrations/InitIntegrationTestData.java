@@ -7,6 +7,7 @@ import com.salem.budgetApp.builders.PropertyEntityBuilder;
 import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.enums.ExpensesCategory;
 import com.salem.budgetApp.mappers.ExpensesMapper;
+import com.salem.budgetApp.mappers.PropertyMapper;
 import com.salem.budgetApp.repositories.AssetsRepository;
 import com.salem.budgetApp.repositories.ExpensesRepository;
 import com.salem.budgetApp.repositories.PropertyRepository;
@@ -60,6 +61,8 @@ public abstract class InitIntegrationTestData {
     protected PropertyService propertyService;
     @Autowired
     protected PropertyRepository propertyRepository;
+    @Autowired
+    protected PropertyMapper propertyMapper;
 
     protected static final String USER_NAME_PRIME = "userNamePrime";
     protected static final String USER_PASSWORD_PRIME = "userPasswordPrime";
@@ -247,6 +250,43 @@ public abstract class InitIntegrationTestData {
         propertyRepository.save(property);
 
     }
+
+    protected void initDatabaseByDefaultMockUserAndHisProperty() {
+        var user = initDatabaseByPrimeUser();
+
+        PropertyEntity property1 = new PropertyEntityBuilder()
+                .withPostCode("70-649")
+                .withCity("Poznan")
+                .withStreet("Hetmanska")
+                .withHouse("12A")
+                .withSingle(false)
+                .withRooms(4)
+                .withUser(user)
+                .build();
+
+        PropertyEntity property2 = new PropertyEntityBuilder()
+                .withPostCode("16-320")
+                .withCity("Warsaw")
+                .withStreet("Gajowa")
+                .withHouse("213")
+                .withSingle(false)
+                .withRooms(2)
+                .withUser(user)
+                .build();
+
+        PropertyEntity property3 = new PropertyEntityBuilder()
+                .withPostCode("60-813")
+                .withCity("Cracow")
+                .withStreet("Bukowska")
+                .withHouse("235/13")
+                .withSingle(true)
+                .withRooms(5)
+                .withUser(user)
+                .build();
+
+        propertyRepository.saveAll(asList(property1, property2, property3));
+    }
+
 
 
 

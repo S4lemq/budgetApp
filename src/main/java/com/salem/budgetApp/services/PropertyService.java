@@ -7,7 +7,9 @@ import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.PropertyDto;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ public class PropertyService {
     }
 
     public UUID addProperty(PropertyDto dto){
-        UserEntity user = userLogInfoService.getLoggedUserEntity();
+        UserEntity user = getUserEntity();
         PropertyEntity entity = new PropertyEntity();
 
         entity.setUser(user);
@@ -42,10 +44,49 @@ public class PropertyService {
     }
 
     public List<PropertyDto> findAllProperties(){
-        var user = userLogInfoService.getLoggedUserEntity();
+        var user = getUserEntity();
         return propertyRepository.findAllByUser(user)
                 .stream()
                 .map(entity -> propertyMapper.fromEntityToDto(entity))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteProperty(PropertyDto dto){
+        var user = getUserEntity();
+        var entity = propertyMapper.fromDtoToEntity(dto, user);
+        propertyRepository.delete(entity);
+    }
+
+    @Transactional
+    public void updateProperty(PropertyDto dto){
+        var entity = propertyRepository.findById(dto.getId());
+        if(entity.isPresent()){
+            updateProperty(entity.get(), dto);
+        }
+    }
+
+    private void updateProperty(PropertyEntity entity, PropertyDto dto){
+        if(Objects.nonNull(dto.getRooms()) && !dto.getRooms().equals(entity.getRooms())){
+            entity.setRooms(dto.getRooms());
+        }
+        if(Objects.nonNull(dto.getSingle()) && !dto.getSingle().equals(entity.getSingle())){
+            entity.setSingle(dto.getSingle());
+        }
+        if(Objects.nonNull(dto.getCity()) && !dto.getCity().equals(entity.getCity())){
+            entity.setCity(dto.getCity());
+        }
+        if(Objects.nonNull(dto.getPostCode()) && !dto.getPostCode().equals(entity.getPostCode())){
+            entity.setPostCode(dto.getPostCode());
+        }
+        if(Objects.nonNull(dto.getSingle()) && !dto.getStreet().equals(entity.getStreet())){
+            entity.setStreet(dto.getStreet());
+        }
+        if(Objects.nonNull(dto.getHouse()) && !dto.getHouse().equals(entity.getHouse())){
+            entity.setHouse(dto.getHouse());
+        }
+    }
+
+    private UserEntity getUserEntity(){
+        return userLogInfoService.getLoggedUserEntity();
     }
 }
