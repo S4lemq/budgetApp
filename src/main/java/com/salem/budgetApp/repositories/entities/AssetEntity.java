@@ -27,6 +27,7 @@ public class AssetEntity {
     private AssetCategory category;
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
+    private String description;
 
     public UUID getId() {
         return id;
@@ -68,6 +69,14 @@ public class AssetEntity {
         this.user = user;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -89,6 +98,7 @@ public class AssetEntity {
                 ", incomeDate=" + incomeDate +
                 ", category=" + category +
                 ", user=" + user +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

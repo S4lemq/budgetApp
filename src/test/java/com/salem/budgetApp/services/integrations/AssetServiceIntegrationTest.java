@@ -43,10 +43,12 @@ public class AssetServiceIntegrationTest extends InitIntegrationTestData{
     void should_add_asset_to_DB(){
         //given
         initDatabaseByPrimeUser();
+        String description = "some description";
         AssetDto dto = new AssetDtoBuilder()
                 .withAmount(new BigDecimal(4000))
                 .withIncomeDate(Instant.now())
                 .withCategory(AssetCategory.SALARY)
+                .withDescription(description)
                 .build();
         //when
         assetsService.setAsset(dto);
@@ -58,6 +60,7 @@ public class AssetServiceIntegrationTest extends InitIntegrationTestData{
         assertThat(entity.getAmount()).isEqualTo(dto.getAmount());
         assertThat(entity.getIncomeDate()).isEqualTo(dto.getIncomeDate());
         assertThat(entity.getCategory()).isEqualTo(dto.getCategory());
+        assertThat(entity.getDescription()).isEqualTo(dto.getDescription());
     }
 
     @Test

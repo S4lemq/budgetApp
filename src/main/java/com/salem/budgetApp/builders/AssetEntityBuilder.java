@@ -14,6 +14,7 @@ public class AssetEntityBuilder {
     private Instant incomeDate;
     private AssetCategory category;
     private UserEntity user;
+    private String description;
 
     public AssetEntityBuilder withId(UUID id){
         this.id = id;
@@ -22,6 +23,11 @@ public class AssetEntityBuilder {
 
     public AssetEntityBuilder withAmount(BigDecimal amount){
         this.amount = amount;
+        return this;
+    }
+
+    public AssetEntityBuilder withDescription(String description){
+        this.description = description;
         return this;
     }
 
@@ -47,6 +53,7 @@ public class AssetEntityBuilder {
         entity.setIncomeDate(this.incomeDate);
         entity.setCategory(this.category);
         entity.setUser(this.user);
+        entity.setDescription(this.description);
         return entity;
     }
 

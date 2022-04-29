@@ -22,6 +22,10 @@ public class AssetsMapper {
             entityBuilder.withId(dto.getId());
         }
 
+        if(Objects.nonNull(dto.getDescription())){
+            entityBuilder.withDescription(dto.getDescription());
+        }
+
         if(Objects.nonNull(dto.getAmount())){
             entityBuilder.withAmount(dto.getAmount());
         }
@@ -50,6 +54,10 @@ public class AssetsMapper {
 
         if(Objects.nonNull(entity.getId())){
             dtoBuilder.withId(entity.getId());
+        }
+
+        if(Objects.nonNull(entity.getDescription())){
+            dtoBuilder.withDescription(entity.getDescription());
         }
 
         if(Objects.nonNull(entity.getAmount())){
