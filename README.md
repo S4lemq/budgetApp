@@ -7,7 +7,7 @@ pomocy Spring Security. Zaimplementowałem walidację obiektów, oraz wyświetla
 Filtrowanie pobieranych przychodów wykorzystując wzorzec projektowy metoda wytwórcza. Aplikacja posiada mappery, które mapują Dto<=>Encje, wykorzystuję przy tym wzorzec
 projektowy budowniczy, który tworzy obiekty.
 
-# Jak włączyć aplikację:
+# Jak włączyć aplikację
 1. Otwórz projekt w InteliJ, przejdź do: budgetApp/src/main/java/com/salem/budgetApp/BudgetAppApplication.java
 prawy klik na Application.java -> Odpal 'Application.main()'
 2. Otwórz główny folder budgetApp -> Otwórz cmd i wpisz: mvn spring-boot:run
