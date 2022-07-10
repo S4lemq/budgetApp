@@ -2,24 +2,18 @@ package com.salem.budgetApp.services.integrations;
 
 import com.salem.budgetApp.builders.AssetEntityBuilder;
 import com.salem.budgetApp.builders.ExpensesEntityBuilder;
-import com.salem.budgetApp.builders.PropertyDtoBuilder;
 import com.salem.budgetApp.builders.PropertyEntityBuilder;
 import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.enums.ExpensesCategory;
+import com.salem.budgetApp.enums.RoomsType;
 import com.salem.budgetApp.mappers.ExpensesMapper;
 import com.salem.budgetApp.mappers.PropertyMapper;
 import com.salem.budgetApp.repositories.*;
-import com.salem.budgetApp.repositories.entities.AssetEntity;
-import com.salem.budgetApp.repositories.entities.ExpensesEntity;
-import com.salem.budgetApp.repositories.entities.PropertyEntity;
-import com.salem.budgetApp.repositories.entities.UserEntity;
+import com.salem.budgetApp.repositories.entities.*;
 import com.salem.budgetApp.services.*;
-import com.salem.budgetApp.services.dtos.PropertyDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import javax.transaction.Transactional;
@@ -286,6 +280,19 @@ public abstract class InitIntegrationTestData {
                 .build();
 
         propertyRepository.saveAll(asList(property1, property2, property3));
+    }
+
+    protected UUID initDatabaseByRoom(RoomsType type,
+                                      BigDecimal cost,
+                                      UserEntity user){
+        var entity = RoomsEntity.builder()
+                .user(user)
+                .cost(cost)
+                .type(type)
+                .build();
+
+        var savedEntity = roomsRepository.save(entity);
+        return savedEntity.getId();
     }
 
 
