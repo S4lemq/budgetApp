@@ -7,7 +7,7 @@ import java.util.UUID;
 public class PropertyDtoBuilder {
 
     private UUID id;
-    private Integer rooms;
+//    private Integer rooms;
     private Boolean single;
     private String city;
     private String postCode;
@@ -19,10 +19,10 @@ public class PropertyDtoBuilder {
         return this;
     }
 
-    public PropertyDtoBuilder withRooms(Integer rooms){
-        this.rooms = rooms;
-        return this;
-    }
+//    public PropertyDtoBuilder withRooms(Integer rooms){
+//        this.rooms = rooms;
+//        return this;
+//    }
 
     public PropertyDtoBuilder withSingle(Boolean single){
         this.single = single;
@@ -52,7 +52,7 @@ public class PropertyDtoBuilder {
     public PropertyDto build(){
         PropertyDto dto = new PropertyDto();
         dto.setId(this.id);
-        dto.setRooms(this.rooms);
+//        dto.setRooms(this.rooms);
         dto.setSingle(this.single);
         dto.setCity(this.city);
         dto.setPostCode(this.postCode);

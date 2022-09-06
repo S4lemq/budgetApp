@@ -1,14 +1,14 @@
 package com.salem.budgetApp.services.integrations;
 
-import com.salem.budgetApp.builders.PropertyDtoBuilder;
-import com.salem.budgetApp.builders.PropertyEntityBuilder;
+import com.salem.budgetApp.enums.RoomsType;
 import com.salem.budgetApp.repositories.entities.PropertyEntity;
 import com.salem.budgetApp.services.dtos.PropertyDto;
-import org.assertj.core.util.Streams;
 import org.junit.jupiter.api.Test;
 
-import java.util.stream.Collectors;
+import java.math.BigDecimal;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -23,16 +23,14 @@ public class PropertyServiceIntegrationTest extends InitIntegrationTestData{
         var street = "Hetmanska";
         var house = "12A";
         var single = false;
-        var rooms = 3;
 
         initDatabaseByPrimeUser();
-        PropertyDto property = new PropertyDtoBuilder()
-                .withPostCode(postCode)
-                .withCity(city)
-                .withStreet(street)
-                .withHouse(house)
-                .withSingle(single)
-                .withRooms(rooms)
+        PropertyDto property = PropertyDto.builder()
+                .postCode(postCode)
+                .city(city)
+                .street(street)
+                .house(house)
+                .single(single)
                 .build();
 
         //when
@@ -44,14 +42,12 @@ public class PropertyServiceIntegrationTest extends InitIntegrationTestData{
         assertThat(entityList).hasSize(1);
         var entity = entityList.get(0);
         assertAll(
-                () -> assertThat(entity.getRooms()).isEqualTo(rooms),
                 () -> assertThat(entity.getPostCode()).isEqualTo(postCode),
                 () -> assertThat(entity.getCity()).isEqualTo(city),
                 () -> assertThat(entity.getStreet()).isEqualTo(street),
                 () -> assertThat(entity.getHouse()).isEqualTo(house)
         );
     }
-
     @Test
     void should_find_one_property_in_data_base() {
         //given
@@ -59,71 +55,72 @@ public class PropertyServiceIntegrationTest extends InitIntegrationTestData{
         initDatabaseByProperty(user);
 
         //when
-        var dtoList = propertyService.findAllProperties();
+        var dtoList = propertyService.findAllProperties(false);
 
         //then
         assertThat(dtoList).hasSize(1);
     }
 
     @Test
-    void should_delete_property_from_data_base() {
+    void should_update_property_in_database() {
         //given
-        initDatabaseByDefaultMockUserAndHisProperty();
-        int numberOfLeaveProperty = 2;
+        var user = initDatabaseByPrimeUser();
+        initDatabaseByProperty(user);
+        var roomType = RoomsType.ROOM_XL;
+        var roomId = initDatabaseByRoom(roomType, BigDecimal.TEN, user);
 
-        var dataBaseBeforeDelete = propertyRepository.findAll();
-        var entityIdToDelete = propertyRepository.findAll().get(0).getId();
-        var entityToDelete = propertyRepository.findById(entityIdToDelete).get();
+        PropertyDto property = propertyService.findAllProperties(false).stream().findFirst().get();
+        List<PropertyEntity> all = propertyRepository.findAll();
+        assertThat(property.getRooms()).isNull();
+
+        var single = property.getSingle();
+
+        var newSingle = !single;
+        var newRooms = roomsService.getAll().stream()
+                .filter(it -> it.getId().equals(roomId))
+                .toList();
+        property.setSingle(newSingle);
+        property.setRooms(newRooms);
 
         //when
-        propertyService.deleteProperty(propertyMapper.fromEntityToDto(entityToDelete));
+        propertyService.updateProperty(property);
 
         //then
-        assertThat(propertyRepository.findAll()).hasSize(numberOfLeaveProperty);
-        var dataBaseWithoutDeletedProperty = Streams.stream(dataBaseBeforeDelete)
-                .filter(entity -> !entity.equals(entityToDelete))
-                .collect(Collectors.toList());
-        assertThat(propertyRepository.findAll()).isEqualTo(dataBaseWithoutDeletedProperty);
+        var entity = propertyRepository.findAll().stream().findFirst().get();
+        assertThat(entity.getSingle()).isEqualTo(newSingle);
+        assertThat(entity.getRooms()).hasSize(1);
+        assertThat(entity.getRooms().get(0).getType()).isEqualTo(roomType);
+
     }
 
     @Test
-    void should_update_property_in_database() {
+    void should_update_rooms_in_property_in_database(){
         //given
-        var newPostCode = "00-000";
-        var newCity = "Bialystok";
-        var newStreet = "Piekna";
-        var newHouse = "00";
-        var newSingle = true;
-        var newRooms = 10;
+        var user = initDatabaseByPrimeUser();
+        var roomXlId = initDatabaseByRoom(RoomsType.ROOM_XL, BigDecimal.TEN, user);
+        var roomLId = initDatabaseByRoom(RoomsType.ROOM_L, new BigDecimal("8"), user);
+        var roomMId = initDatabaseByRoom(RoomsType.ROOM_L, new BigDecimal("4"), user);
 
-        initDatabaseByDefaultMockUserAndHisProperty();
-        var entityId = propertyRepository.findAll().get(0).getId();
-        PropertyEntity changedProperty = new PropertyEntityBuilder()
-                .withId(entityId)
-                .withPostCode(newPostCode)
-                .withCity(newCity)
-                .withStreet(newStreet)
-                .withHouse(newHouse)
-                .withSingle(newSingle)
-                .withRooms(newRooms)
-                .withUser(propertyRepository.findById(entityId).get().getUser())
-                .build();
+        initDatabaseByProperty(user, roomXlId, roomMId);
+
+        var property = propertyService.findAllProperties(false).stream().findFirst().get();
+
+        var newRoomsLAndM = roomsService.getAll().stream()
+                .filter(it -> it.getId().equals(roomLId)
+                        || it.getId().equals(roomMId))
+                .toList();
+        property.setRooms(newRoomsLAndM);
 
         //when
-        propertyService.updateProperty(propertyMapper.fromEntityToDto(changedProperty));
+        propertyService.updateProperty(property);
 
         //then
-        assertThat(propertyRepository.findById(entityId)
-                .get().getPostCode()).isEqualTo(newPostCode);
-        assertThat(propertyRepository.findById(entityId)
-                .get().getCity()).isEqualTo(newCity);
-        assertThat(propertyRepository.findById(entityId)
-                .get().getStreet()).isEqualTo(newStreet);
-        assertThat(propertyRepository.findById(entityId)
-                .get().getHouse()).isEqualTo(newHouse);
-        assertThat(propertyRepository.findById(entityId)
-                .get().getSingle()).isEqualTo(newSingle);
-        assertThat(propertyRepository.findById(entityId)
-                .get().getRooms()).isEqualTo(newRooms);
+        var entity = propertyRepository.findAll().stream().findFirst().get();
+        assertThat(entity.getRooms()).hasSize(2);
+        var containsRoomsLAndM = property.getRooms().stream()
+                .map(it -> it.getId())
+                .toList()
+                .containsAll(asList(roomLId, roomMId));
+        assertThat(containsRoomsLAndM).isTrue();
     }
 }

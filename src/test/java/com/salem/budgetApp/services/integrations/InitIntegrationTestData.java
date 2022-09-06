@@ -19,6 +19,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
@@ -225,25 +227,35 @@ public abstract class InitIntegrationTestData {
     }
 
     protected void initDatabaseByProperty(UserEntity user){
+        initDatabaseByProperty(user, null);
+    }
+
+    protected void initDatabaseByProperty(UserEntity user, UUID... roomsId){
         var postCode = "70-649";
         var city = "Poznan";
         var street = "Hetmanska";
         var house = "12A";
         var single = false;
-        var rooms = 3;
 
-        PropertyEntity property = new PropertyEntityBuilder()
-                .withPostCode(postCode)
-                .withCity(city)
-                .withStreet(street)
-                .withHouse(house)
-                .withSingle(single)
-                .withRooms(rooms)
-                .withUser(user)
+        var roomsIdForEntity = Objects.isNull(roomsId)
+                ? null
+                : Arrays.stream(roomsId).toList();
+        var roomsEntity = Objects.isNull(roomsIdForEntity)
+                ? null
+                : roomsRepository.findAllById(roomsIdForEntity);
+
+        PropertyEntity property = PropertyEntity.builder()
+                .postCode(postCode)
+                .city(city)
+                .street(street)
+                .house(house)
+                .single(single)
+                .user(user)
+                .sold(false)
+                .rooms(roomsEntity)
                 .build();
 
         propertyRepository.save(property);
-
     }
 
     protected void initDatabaseByDefaultMockUserAndHisProperty() {
@@ -255,7 +267,7 @@ public abstract class InitIntegrationTestData {
                 .withStreet("Hetmanska")
                 .withHouse("12A")
                 .withSingle(false)
-                .withRooms(4)
+//                .withRooms(4)
                 .withUser(user)
                 .build();
 
@@ -265,7 +277,7 @@ public abstract class InitIntegrationTestData {
                 .withStreet("Gajowa")
                 .withHouse("213")
                 .withSingle(false)
-                .withRooms(2)
+//                .withRooms(2)
                 .withUser(user)
                 .build();
 
@@ -275,7 +287,7 @@ public abstract class InitIntegrationTestData {
                 .withStreet("Bukowska")
                 .withHouse("235/13")
                 .withSingle(true)
-                .withRooms(5)
+//                .withRooms(5)
                 .withUser(user)
                 .build();
 

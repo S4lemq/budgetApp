@@ -5,6 +5,7 @@ import com.salem.budgetApp.services.dtos.PropertyDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/properties")
@@ -23,7 +24,12 @@ public class PropertyController {
 
     @GetMapping
     public List<PropertyDto> getAllProperties(){
-        return propertyService.findAllProperties();
+        return propertyService.findAllProperties(false);
+    }
+
+    @GetMapping("/{sold}")
+    public List<PropertyDto> getAllSoldProperties(){
+        return propertyService.findAllProperties(true);
     }
 
     @PutMapping
@@ -31,8 +37,8 @@ public class PropertyController {
         propertyService.updateProperty(dto);
     }
 
-    @DeleteMapping
-    public void deleteProperty(@RequestBody PropertyDto dto){
-        propertyService.deleteProperty(dto);
+    @DeleteMapping("/{id}")
+    public void setSoldProperty(@PathVariable UUID id){
+        propertyService.setSoldProperty(id);
     }
 }

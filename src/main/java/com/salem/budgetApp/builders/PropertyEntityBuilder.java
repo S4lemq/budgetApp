@@ -8,7 +8,7 @@ import java.util.UUID;
 public class PropertyEntityBuilder {
 
     private UUID id;
-    private Integer rooms;
+//    private Integer rooms;
     private Boolean single;
     private String city;
     private String postCode;
@@ -21,10 +21,10 @@ public class PropertyEntityBuilder {
         return this;
     }
 
-    public PropertyEntityBuilder withRooms(Integer rooms){
-        this.rooms = rooms;
-        return this;
-    }
+//    public PropertyEntityBuilder withRooms(Integer rooms){
+//        this.rooms = rooms;
+//        return this;
+//    }
 
     public PropertyEntityBuilder withSingle(Boolean single){
         this.single = single;
@@ -59,7 +59,7 @@ public class PropertyEntityBuilder {
     public PropertyEntity build(){
         var entity = new PropertyEntity();
         entity.setId(this.id);
-        entity.setRooms(this.rooms);
+//        entity.setRooms(this.rooms);
         entity.setSingle(this.single);
         entity.setCity(this.city);
         entity.setPostCode(this.postCode);
