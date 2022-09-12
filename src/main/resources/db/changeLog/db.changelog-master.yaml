@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/migration/011-propertySchemaChangeRoomColumn.yaml
   - include:
       file: db/migration/012-propertyRoomAssociationTable.yaml
+  - include:
+      file: db/migration/013-propertyRoomChangeAssociationTable.yaml

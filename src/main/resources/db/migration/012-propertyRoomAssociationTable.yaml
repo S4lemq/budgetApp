@@ -1,7 +1,8 @@
+
 databaseChangeLog:
   - changeSet:
       id: 012-property-room-association-table
-      author: Peter Lubowicz
+      author: rs
       changes:
         - createTable:
             tableName: property_room_associations

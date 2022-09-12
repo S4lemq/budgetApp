@@ -22,6 +22,7 @@ public class PropertyService {
     private final UserLogInfoService userLogInfoService;
     private final PropertyMapper propertyMapper;
     private final RoomsRepository roomsRepository;
+    private final RentService rentService;
 
     public UUID addProperty(PropertyDto dto){
         UserEntity user = getUserEntity();
@@ -35,7 +36,8 @@ public class PropertyService {
         var user = getUserEntity();
         return propertyRepository.findAllByUser(user, isSold)
                 .stream()
-                .map(entity -> propertyMapper.fromEntityToDto(entity))
+                .map(rentService::setRentRoomInProperty)
+                .map(propertyMapper::fromEntityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -47,6 +49,15 @@ public class PropertyService {
 
     @Transactional
     public void updateProperty(PropertyDto dto){
+        updateOnlyProperty(dto);
+        updateRentRoomsInProperty(dto);
+    }
+
+    private void updateRentRoomsInProperty(PropertyDto dto) {
+        rentService.setRentRooms(dto);
+    }
+
+    private void updateOnlyProperty(PropertyDto dto) {
         var entity = propertyRepository.findById(dto.getId()).stream().findFirst();
         if(entity.isPresent()){
             var entityToChange = entity.get();
@@ -57,7 +68,6 @@ public class PropertyService {
             propertyMapper.updateEntityByDto(entityToChange, dto, roomsEntity);
         }
     }
-
 
 
     private UserEntity getUserEntity(){

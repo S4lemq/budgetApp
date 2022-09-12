@@ -17,5 +17,5 @@ public class RoomsDto {
     private UUID id;
     private RoomsType type;
     private BigDecimal cost;
-
+    private Boolean rent;
 }
