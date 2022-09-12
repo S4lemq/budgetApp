@@ -1,4 +1,4 @@
-package com.salem.budgetApp.builders;
+package com.salem.budgetApp.repositories.entities.builders;
 
 import com.salem.budgetApp.repositories.entities.PropertyEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;

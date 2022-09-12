@@ -1,6 +1,5 @@
 package com.salem.budgetApp.services.integrations;
 
-import com.salem.budgetApp.builders.AssetDtoBuilder;
 import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.enums.FilterExceptionErrorMessages;
 import com.salem.budgetApp.enums.FilterParametersEnum;
@@ -21,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -44,14 +44,14 @@ public class AssetServiceIntegrationTest extends InitIntegrationTestData{
         //given
         initDatabaseByPrimeUser();
         String description = "some description";
-        AssetDto dto = new AssetDtoBuilder()
-                .withAmount(new BigDecimal(4000))
-                .withIncomeDate(Instant.now())
-                .withCategory(AssetCategory.SALARY)
-                .withDescription(description)
+        AssetDto dto = AssetDto.builder()
+                .amount(new BigDecimal(4000))
+                .incomeDate(Instant.now())
+                .category(AssetCategory.SALARY)
+                .description(description)
                 .build();
         //when
-        assetsService.setAsset(dto);
+        assetsService.setAsset(asList(dto));
 
         //then
         var allAssetsInDB = assetsRepository.findAll();

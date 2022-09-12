@@ -1,7 +1,7 @@
 package com.salem.budgetApp.mappers;
 
-import com.salem.budgetApp.builders.ExpensesDtoBuilder;
-import com.salem.budgetApp.builders.ExpensesEntityBuilder;
+import com.salem.budgetApp.repositories.entities.builders.ExpensesDtoBuilder;
+import com.salem.budgetApp.repositories.entities.builders.ExpensesEntityBuilder;
 import com.salem.budgetApp.repositories.entities.ExpensesEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.ExpensesDto;

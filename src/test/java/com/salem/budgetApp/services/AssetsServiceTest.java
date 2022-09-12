@@ -1,7 +1,5 @@
 package com.salem.budgetApp.services;
 
-import com.salem.budgetApp.builders.AssetDtoBuilder;
-import com.salem.budgetApp.builders.AssetEntityBuilder;
 import com.salem.budgetApp.enums.ValidatorsAssetEnum;
 import com.salem.budgetApp.exceptions.AssetIncompleteException;
 import com.salem.budgetApp.filters.FilterRangeStrategy;
@@ -57,8 +55,8 @@ public class AssetsServiceTest {
     void should_return_list_with_one_element_if_there_is_one_element_in_database(){
         //given
         var asset = BigDecimal.ONE;
-        AssetEntity assetEntity = new AssetEntityBuilder()
-                .withAmount(asset)
+        AssetEntity assetEntity = AssetEntity.builder()
+                .amount(asset)
                 .build();
         List<AssetEntity> assetList = Collections.singletonList(assetEntity);
         Mockito.when(assetsRepository.getAssetEntitiesByUser(any())).thenReturn(assetList);
@@ -69,7 +67,7 @@ public class AssetsServiceTest {
         //then
         Assertions.assertThat(result)
                 .hasSize(1)
-                .contains(new AssetDtoBuilder().withAmount(asset).build());
+                .contains(AssetDto.builder().amount(asset).build());
     }
 
     @Test
@@ -77,11 +75,11 @@ public class AssetsServiceTest {
         //given
         var asset1 = BigDecimal.ONE;
         var asset2 = new BigDecimal("2");
-        AssetEntity entityOne = new AssetEntityBuilder()
-                .withAmount(asset1)
+        AssetEntity entityOne = AssetEntity.builder()
+                .amount(asset1)
                 .build();
-        AssetEntity entityTwo = new AssetEntityBuilder()
-                .withAmount(asset2)
+        AssetEntity entityTwo = AssetEntity.builder()
+                .amount(asset2)
                 .build();
         List<AssetEntity> assetsEntity = asList(entityOne,entityTwo);
         Mockito.when(assetsRepository.getAssetEntitiesByUser(any())).thenReturn(assetsEntity);
@@ -93,8 +91,8 @@ public class AssetsServiceTest {
         Assertions.assertThat(result)
                 .hasSize(2)
                 .containsExactly(
-                        new AssetDtoBuilder().withAmount(asset1).build(),
-                        new AssetDtoBuilder().withAmount(asset2).build()
+                        AssetDto.builder().amount(asset1).build(),
+                        AssetDto.builder().amount(asset2).build()
                 );
     }
 
@@ -103,16 +101,16 @@ public class AssetsServiceTest {
         //given
         BigDecimal asset = BigDecimal.ONE;
         Instant incomeDate = Instant.now();
-        AssetDto dto = new AssetDtoBuilder()
-                .withAmount(asset)
-                .withIncomeDate(incomeDate)
+        AssetDto dto = AssetDto.builder()
+                .amount(asset)
+                .incomeDate(incomeDate)
                 .build();
-        AssetEntity entity = new AssetEntityBuilder()
-                .withAmount(asset)
+        AssetEntity entity = AssetEntity.builder()
+                .amount(asset)
                 .build();
 
         //when
-        service.setAsset(dto);
+        service.setAsset(asList(dto));
 
         //then
         Mockito.verify(assetsRepository, Mockito.times(1)).save(entity);
@@ -121,12 +119,12 @@ public class AssetsServiceTest {
     @Test
     void should_throw_exception_when_amount_in_assetDto_is_null(){
         //given
-        AssetDto dto = new AssetDtoBuilder()
-                .withIncomeDate(Instant.now())
+        AssetDto dto = AssetDto.builder()
+                .incomeDate(Instant.now())
                 .build();
 
         //when
-        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(dto));
+        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(asList(dto)));
 
         //then
         assertEquals(ValidatorsAssetEnum.NO_AMOUNT.getMessage(), result.getMessage());
@@ -136,8 +134,8 @@ public class AssetsServiceTest {
     void should_verify_if_the_repository_update_was_called(){
         //given
         BigDecimal asset = BigDecimal.ONE;
-        var dto = new AssetDtoBuilder().withAmount(asset).build();
-        var entity = new AssetEntityBuilder().withAmount(asset).build();
+        var dto = AssetDto.builder().amount(asset).build();
+        var entity = AssetEntity.builder().amount(asset).build();
         Mockito.when(assetsRepository.findById(any())).thenReturn(Optional.of(entity));
 
         //when
@@ -151,12 +149,12 @@ public class AssetsServiceTest {
     void should_throw_exception_when_IncomeDate_in_assetDto_is_null(){
         //given
         BigDecimal asset = BigDecimal.ONE;
-        AssetDto dto = new AssetDtoBuilder()
-                .withAmount(asset)
+        AssetDto dto = AssetDto.builder()
+                .amount(asset)
                 .build();
 
         //when
-        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(dto));
+        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(asList(dto)));
 
         //then
         assertEquals(ValidatorsAssetEnum.NO_INCOME_DATE.getMessage(), result.getMessage());
@@ -172,7 +170,7 @@ public class AssetsServiceTest {
                 + ValidatorsAssetEnum.NO_INCOME_DATE.getMessage();
 
         //when
-        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(dto));
+        var result = assertThrows(AssetIncompleteException.class, () -> service.setAsset(asList(dto)));
 
         //then
         assertEquals(expectedMessage, result.getMessage());

@@ -1,7 +1,5 @@
 package com.salem.budgetApp.mappers;
 
-import com.salem.budgetApp.builders.AssetDtoBuilder;
-import com.salem.budgetApp.builders.AssetEntityBuilder;
 import com.salem.budgetApp.repositories.entities.AssetEntity;
 import com.salem.budgetApp.repositories.entities.UserEntity;
 import com.salem.budgetApp.services.dtos.AssetDto;
@@ -16,30 +14,30 @@ public class AssetsMapper {
         if(Objects.isNull(dto)){
             return null;
         }
-        var entityBuilder = new AssetEntityBuilder();
+        var entityBuilder = AssetEntity.builder();
 
         if(Objects.nonNull(dto.getId())){
-            entityBuilder.withId(dto.getId());
+            entityBuilder.id(dto.getId());
         }
 
         if(Objects.nonNull(dto.getDescription())){
-            entityBuilder.withDescription(dto.getDescription());
+            entityBuilder.description(dto.getDescription());
         }
 
         if(Objects.nonNull(dto.getAmount())){
-            entityBuilder.withAmount(dto.getAmount());
+            entityBuilder.amount(dto.getAmount());
         }
 
         if(Objects.nonNull(dto.getIncomeDate())){
-            entityBuilder.withInsuranceDate(dto.getIncomeDate());
+            entityBuilder.incomeDate(dto.getIncomeDate());
         }
 
         if(Objects.nonNull(dto.getCategory())){
-            entityBuilder.withCategory(dto.getCategory());
+            entityBuilder.category(dto.getCategory());
         }
 
         if(Objects.nonNull(user)){
-            entityBuilder.withUser(user);
+            entityBuilder.user(user);
         }
 
         return entityBuilder.build();
@@ -50,26 +48,26 @@ public class AssetsMapper {
             return null;
         }
 
-        var dtoBuilder = new AssetDtoBuilder();
+        var dtoBuilder = AssetDto.builder();
 
         if(Objects.nonNull(entity.getId())){
-            dtoBuilder.withId(entity.getId());
+            dtoBuilder.id(entity.getId());
         }
 
         if(Objects.nonNull(entity.getDescription())){
-            dtoBuilder.withDescription(entity.getDescription());
+            dtoBuilder.description(entity.getDescription());
         }
 
         if(Objects.nonNull(entity.getAmount())){
-            dtoBuilder.withAmount(entity.getAmount());
+            dtoBuilder.amount(entity.getAmount());
         }
 
         if(Objects.nonNull(entity.getIncomeDate())){
-            dtoBuilder.withIncomeDate(entity.getIncomeDate());
+            dtoBuilder.incomeDate(entity.getIncomeDate());
         }
 
         if(Objects.nonNull(entity.getCategory())){
-            dtoBuilder.withCategory(entity.getCategory());
+            dtoBuilder.category(entity.getCategory());
         }
 
         return dtoBuilder.build();

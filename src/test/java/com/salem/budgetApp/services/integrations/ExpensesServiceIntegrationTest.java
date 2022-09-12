@@ -1,7 +1,7 @@
 package com.salem.budgetApp.services.integrations;
 
-import com.salem.budgetApp.builders.ExpensesDtoBuilder;
-import com.salem.budgetApp.builders.ExpensesEntityBuilder;
+import com.salem.budgetApp.repositories.entities.builders.ExpensesDtoBuilder;
+import com.salem.budgetApp.repositories.entities.builders.ExpensesEntityBuilder;
 import com.salem.budgetApp.enums.ExpensesCategory;
 import com.salem.budgetApp.enums.FilterExceptionErrorMessages;
 import com.salem.budgetApp.enums.FilterParametersEnum;

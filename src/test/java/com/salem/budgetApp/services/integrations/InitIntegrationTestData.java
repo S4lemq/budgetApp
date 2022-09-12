@@ -1,8 +1,7 @@
 package com.salem.budgetApp.services.integrations;
 
-import com.salem.budgetApp.builders.AssetEntityBuilder;
-import com.salem.budgetApp.builders.ExpensesEntityBuilder;
-import com.salem.budgetApp.builders.PropertyEntityBuilder;
+import com.salem.budgetApp.repositories.entities.builders.ExpensesEntityBuilder;
+import com.salem.budgetApp.repositories.entities.builders.PropertyEntityBuilder;
 import com.salem.budgetApp.enums.AssetCategory;
 import com.salem.budgetApp.enums.ExpensesCategory;
 import com.salem.budgetApp.enums.RoomsType;
@@ -81,11 +80,11 @@ public abstract class InitIntegrationTestData {
     }
 
     private void initDatabaseByAssetsForUser(UserEntity userEntity, Instant date, AssetCategory category) {
-        var assetEntity = new AssetEntityBuilder()
-                .withInsuranceDate(date)
-                .withUser(userEntity)
-                .withAmount(BigDecimal.ONE)
-                .withCategory(category)
+        var assetEntity = AssetEntity.builder()
+                .incomeDate(date)
+                .user(userEntity)
+                .amount(BigDecimal.ONE)
+                .category(category)
                 .build();
 
         assetRepository.save(assetEntity);
@@ -109,23 +108,23 @@ public abstract class InitIntegrationTestData {
 
     protected void initDatabaseByDefaultMockUserAndHisAssets() {
         var userEntity = initDatabaseByPrimeUser();
-        AssetEntity entity1 = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(10))
-                .withInsuranceDate(Instant.now())
-                .withCategory(AssetCategory.BONUS)
-                .withUser(userEntity)
+        AssetEntity entity1 = AssetEntity.builder()
+                .amount(new BigDecimal(10))
+                .incomeDate(Instant.now())
+                .category(AssetCategory.BONUS)
+                .user(userEntity)
                 .build();
-        AssetEntity entity2 = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(50))
-                .withInsuranceDate(Instant.now())
-                .withCategory(AssetCategory.OTHER)
-                .withUser(userEntity)
+        AssetEntity entity2 = AssetEntity.builder()
+                .amount(new BigDecimal(50))
+                .incomeDate(Instant.now())
+                .category(AssetCategory.OTHER)
+                .user(userEntity)
                 .build();
-        AssetEntity entity3 = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(1500))
-                .withInsuranceDate(Instant.now())
-                .withCategory(AssetCategory.RENT)
-                .withUser(userEntity)
+        AssetEntity entity3 = AssetEntity.builder()
+                .amount(new BigDecimal(1500))
+                .incomeDate(Instant.now())
+                .category(AssetCategory.RENT)
+                .user(userEntity)
                 .build();
 
         assetsRepository.saveAll(asList(entity1, entity2, entity3));
@@ -135,23 +134,23 @@ public abstract class InitIntegrationTestData {
 
     protected void initDatabaseBySecondMockUserAndHisAssets() {
         var userEntity = initDatabaseBySecondUser();
-        AssetEntity entity1 = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(10))
-                .withInsuranceDate(Instant.now())
-                .withCategory(AssetCategory.BONUS)
-                .withUser(userEntity)
+        AssetEntity entity1 = AssetEntity.builder()
+                .amount(new BigDecimal(10))
+                .incomeDate(Instant.now())
+                .category(AssetCategory.BONUS)
+                .user(userEntity)
                 .build();
-        AssetEntity entity2 = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(50))
-                .withInsuranceDate(Instant.now())
-                .withCategory(AssetCategory.OTHER)
-                .withUser(userEntity)
+        AssetEntity entity2 = AssetEntity.builder()
+                .amount(new BigDecimal(50))
+                .incomeDate(Instant.now())
+                .category(AssetCategory.OTHER)
+                .user(userEntity)
                 .build();
-        AssetEntity entity3 = new AssetEntityBuilder()
-                .withAmount(new BigDecimal(1500))
-                .withInsuranceDate(Instant.now())
-                .withCategory(AssetCategory.RENT)
-                .withUser(userEntity)
+        AssetEntity entity3 = AssetEntity.builder()
+                .amount(new BigDecimal(1500))
+                .incomeDate(Instant.now())
+                .category(AssetCategory.RENT)
+                .user(userEntity)
                 .build();
 
         assetsRepository.saveAll(asList(entity1, entity2, entity3));

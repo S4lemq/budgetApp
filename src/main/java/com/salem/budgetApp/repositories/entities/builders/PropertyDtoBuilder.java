@@ -1,4 +1,4 @@
-package com.salem.budgetApp.builders;
+package com.salem.budgetApp.repositories.entities.builders;
 
 import com.salem.budgetApp.services.dtos.PropertyDto;
 
